@@ -58,6 +58,6 @@ export const INSERT_SIMILAR_PRODUCT_QUERY = `
 `;
 
 export const DELETE_SIMILAR_PRODUCTS_QUERY = `
-  DELETE FROM similar 
-  WHERE product_id IN ?
+    DELETE FROM similar 
+    WHERE product_id IN ?
 `;

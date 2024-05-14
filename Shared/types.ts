@@ -14,7 +14,7 @@ export interface IImage {
 }
 
 export interface ISimilarProducts {
-    similarId: string;
+    id: string;
     productId: string;
     similarProductId: string;
 }

@@ -37,7 +37,7 @@ export const mapProductsEntity = (data: IProductEntity[]): IProduct[] => {  // Ð
 
 export const mapSimilarProductEntity = ({ similar_id, product_id, similar_product_id, ...rest }: ISimilarProductEntity): ISimilarProducts => {
     return {
-        similarId: similar_id,
+        id: similar_id,
         productId: product_id,
         similarProductId: similar_product_id,
         ...rest

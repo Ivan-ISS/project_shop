@@ -359,6 +359,40 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
 //===========================================================================
 //====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
 
+productsRouter.get('/similar-product/:id', async (req: Request<{ id: string }>, res: Response) => {
+    try {
+        const [productRows] = await connection.query<IProductEntity[]> (
+            'SELECT * FROM products WHERE product_id = ?',
+            [req.params.id]
+        );
+
+        if (!productRows?.[0]) {
+            res.status(404);
+            res.send(`Product with id ${req.params.id} is not found`);
+            return;
+        }
+
+        const [similarRows] = await connection.query<ISimilarProductEntity[]> (
+            'SELECT * FROM similar WHERE product_id = ?',
+            [req.params.id]
+        );
+
+        const similar = mapSimilarProductsEntity(similarRows);
+        const similarProductsIds = similar.map(item => item.similarProductId);
+
+        const [similarProductRows] = await connection.query<IProductEntity[]> (
+            'SELECT * FROM products WHERE product_id IN ?',
+            [[similarProductsIds]]
+        );
+
+        const similarProducts = mapProductsEntity(similarProductRows);
+
+        res.send(similarProducts);
+    } catch (e) {
+        throwServerError(res, e);
+    }
+});
+
 productsRouter.post('/add-similar-products', async (req: Request<{}, {}, ProductAddSimilar>, res: Response) => {  // ЦЕЛИКОМ
     try {
         const similarProducts = req.body;
@@ -370,7 +404,7 @@ productsRouter.post('/add-similar-products', async (req: Request<{}, {}, Product
         }
 
         const [productRows] = await connection.query<IProductEntity[]> ('SELECT * FROM products');
-        const [similarRows] = await connection.query<ISimilarProductEntity[]> ('SELECT DISTINCT *, similar_product_id FROM similar');
+        const [similarRows] = await connection.query<ISimilarProductEntity[]> ('SELECT * FROM similar');
 
         const products = mapProductsEntity(productRows);
         const similar = mapSimilarProductsEntity(similarRows);
@@ -388,7 +422,7 @@ productsRouter.post('/add-similar-products', async (req: Request<{}, {}, Product
         const checkProductIdInDB = checkArraysForMatchingValues(productIdsQuery, productIdsInDB);
         const checkSimilarProductIdInDB = checkArraysForMatchingValues(similarProductIdsQuery, productIdsInDB);
 
-        if (!checkProductIdInDB || !checkSimilarProductIdInDB) {
+        if (!checkProductIdInDB || !checkSimilarProductIdInDB) {                    // Проверка - все ли товары имеются в БД
             res.status(404);
             res.send('Products with the provided ids were not found');
             return;
@@ -430,7 +464,7 @@ productsRouter.post('/remove-similar-products', async (req: Request<{}, {}, ISim
 
         if (info.affectedRows === 0) {
             res.status(404);
-            res.send("No one similar product has been removed");
+            res.send('No one similar product has been removed');
             return;
         }
 
