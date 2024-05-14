@@ -1,5 +1,5 @@
-import { IComment, IProduct, IImage } from "@Shared/types";
-import { ICommentEntity, IImageEntity, IProductEntity } from '../../types';
+import { IComment, IProduct, IImage, ISimilarProducts } from "@Shared/types";
+import { ICommentEntity, IImageEntity, IProductEntity, ISimilarProductEntity } from '../../types';
 
 export const mapCommentEntity = ({ comment_id, product_id, ...rest }: ICommentEntity): IComment => {
     return {
@@ -33,4 +33,17 @@ export const mapProductsEntity = (data: IProductEntity[]): IProduct[] => {  // Ð
         description: description || '',
         price: Number(price) || 0
     }));
+}
+
+export const mapSimilarProductEntity = ({ similar_id, product_id, similar_product_id, ...rest }: ISimilarProductEntity): ISimilarProducts => {
+    return {
+        similarId: similar_id,
+        productId: product_id,
+        similarProductId: similar_product_id,
+        ...rest
+    };
+}
+
+export const mapSimilarProductsEntity = (data: ISimilarProductEntity[]): ISimilarProducts[] => {
+    return data.map(mapSimilarProductEntity);
 }

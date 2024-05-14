@@ -1,5 +1,5 @@
 import { RowDataPacket } from 'mysql2/index';
-import { IComment, IProduct, IImage, IProductFilterPayload, IAuthRequisites } from "@Shared/types";
+import { IComment, IProduct, IImage, IProductFilterPayload, IAuthRequisites, ISimilarProducts } from "@Shared/types";
 
 //============================Комментарии============================
 export interface ICommentEntity extends RowDataPacket {
@@ -35,6 +35,15 @@ export interface IProductEntity extends IProduct, RowDataPacket {
 }
 
 export type ProductCreatePayload = Omit<IProduct, 'id' | 'comments' | 'thumbnail'>;
+
+//=========================Похожие продукты===========================
+export interface ISimilarProductEntity extends RowDataPacket {
+    similar_id: string;
+    product_id: string;
+    similar_product_id: string;
+}
+
+export type ProductAddSimilar = ISimilarProducts[];
 
 //===========================Для фильтров=============================
 export interface IProductSearchFilter extends IProductFilterPayload {

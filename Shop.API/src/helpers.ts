@@ -169,3 +169,15 @@ export const getProductsFilterQuery = (filter: IProductSearchFilter): [string, s
 
     return [query, values];
 }
+
+//=============================================================================
+//====================ПРОВЕРКА СОВПАДЕНИЙ ЗНАЧЕНИЙ МАССИВОВ====================
+export const checkArraysForMatchingValues = (arrFirst: string[], arrSecond: string[]): boolean => {
+    let checking = true;
+    arrFirst.forEach(elementFirst => {
+        if (!arrSecond.find(elementSecond => elementSecond === elementFirst)) {
+            checking = false;
+        }
+    });
+    return checking;
+}

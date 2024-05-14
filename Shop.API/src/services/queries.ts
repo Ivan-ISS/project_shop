@@ -46,3 +46,13 @@ export const UPDATE_PRODUCT_FIELDS = `
     SET title = ?, description = ?, price = ? 
     WHERE product_id = ?
 `;
+
+
+//===========================================================================
+//====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
+
+export const INSERT_SIMILAR_PRODUCT_QUERY = `
+    INSERT INTO similar
+    (similar_id, product_id, similar_product_id)
+    VALUES ?
+`;

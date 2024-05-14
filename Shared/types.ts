@@ -13,6 +13,12 @@ export interface IImage {
     url: string;
 }
 
+export interface ISimilarProducts {
+    similarId: string;
+    productId: string;
+    similarProductId: string;
+}
+
 export interface IProduct {
     id: string;
     title: string;

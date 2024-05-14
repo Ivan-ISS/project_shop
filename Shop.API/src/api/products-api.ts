@@ -1,12 +1,30 @@
 import { Request, Response, Router } from 'express';
-import { ICommentEntity, IImageEntity, ImageCreatePayload, ProductAddImagesPayload, ImagesRemovePayload, IProductEntity, ProductCreatePayload, IProductSearchFilter } from '../../types';
+import {
+    ICommentEntity,
+    IImageEntity,
+    ImageCreatePayload,
+    ProductAddImagesPayload,
+    ImagesRemovePayload,
+    IProductEntity,
+    ProductCreatePayload,
+    IProductSearchFilter,
+    ISimilarProductEntity,
+    ProductAddSimilar
+} from '../../types';
 import { connection } from '../../index';
 import { ioServer } from '../../../index';
-import { mapCommentsEntity, mapImageEntity, mapImagesEntity, mapProductsEntity } from '../services/mapping';
-import { throwServerError, enhanceProductsComments, enhanceProductsImages, getProductsFilterQuery } from '../helpers';
+import { mapCommentsEntity, mapImageEntity, mapImagesEntity, mapProductsEntity, mapSimilarProductsEntity } from '../services/mapping';
+import { throwServerError, enhanceProductsComments, enhanceProductsImages, getProductsFilterQuery, checkArraysForMatchingValues } from '../helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { OkPacket, RowDataPacket } from 'mysql2';
-import { INSERT_PRODUCT_QUERY, INSERT_IMAGE_QUERY, DELETE_IMAGES_QUERY, REPLACE_PRODUCT_THUMBNAIL, UPDATE_PRODUCT_FIELDS } from '../services/queries';
+import {
+    INSERT_PRODUCT_QUERY,
+    INSERT_IMAGE_QUERY,
+    DELETE_IMAGES_QUERY,
+    REPLACE_PRODUCT_THUMBNAIL,
+    UPDATE_PRODUCT_FIELDS,
+    INSERT_SIMILAR_PRODUCT_QUERY
+} from '../services/queries';
 import { IProduct } from '@Shared/types';
 import { param, body, validationResult } from "express-validator";
 
@@ -331,6 +349,66 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
 
         res.status(200);
         res.end();
+    } catch (e) {
+        throwServerError(res, e);
+    }
+});
+
+//===========================================================================
+//====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
+
+productsRouter.post('/add-similar-products', async (req: Request<{}, {}, ProductAddSimilar>, res: Response) => {  // ЦЕЛИКОМ
+    try {
+        const similarProducts = req.body;
+
+        if (!similarProducts?.length) {
+            res.status(400);
+            res.send('Similar products array is empty');
+            return;
+        }
+
+        const [productRows] = await connection.query<IProductEntity[]> ('SELECT * FROM products');
+        const [similarRows] = await connection.query<ISimilarProductEntity[]> ('SELECT DISTINCT *, similar_product_id FROM similar');
+
+        const products = mapProductsEntity(productRows);
+        const similar = mapSimilarProductsEntity(similarRows);
+
+        const productIdsQuery = similarProducts.map(item => item.productId);
+        const similarProductIdsQuery = similarProducts.map(item => item.similarProductId);
+        const productIdsInDB = products.map(item => item.id);
+
+        // console.log('Пары значений: ', similarProducts);
+        // console.log('Пары значений из БД: ', similarRows);
+        // console.log('Айдишники товаров из запроса: ', productIdsQuery);
+        // console.log('Айдишники похожих товаров из запроса: ', similarProductIdsQuery);
+        // console.log('Айдишники из БД: ', productIdsFromDB);
+
+        const checkProductIdInDB = checkArraysForMatchingValues(productIdsQuery, productIdsInDB);
+        const checkSimilarProductIdInDB = checkArraysForMatchingValues(similarProductIdsQuery, productIdsInDB);
+
+        if (!checkProductIdInDB || !checkSimilarProductIdInDB) {
+            res.status(404);
+            res.send('Products with the provided ids were not found');
+            return;
+        }
+        
+        const similarProductsUniq = similarProducts.filter(similarProduct =>        // Оставляем в массиве только те пары товаров, которых в БД еще нет
+            !similar.some(similarRow =>                                             // В случае явного указания фигурных скобок необходимо писать и ключевое слово 'return'
+                similarProduct.productId === similarRow.productId &&
+                similarProduct.similarProductId === similarRow.similarProductId
+            )
+        );
+
+        for (let i = 0; i < similarProductsUniq.length; i++) {
+            const semilarId = uuidv4();
+            await connection.query<OkPacket> (
+                INSERT_SIMILAR_PRODUCT_QUERY,
+                [[[semilarId, similarProductsUniq[i].productId, similarProductsUniq[i].similarProductId]]]
+            );
+        }
+
+        res.status(201);
+        res.send('Similar products have been added!');
     } catch (e) {
         throwServerError(res, e);
     }
