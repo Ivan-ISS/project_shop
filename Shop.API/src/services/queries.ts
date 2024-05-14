@@ -56,3 +56,8 @@ export const INSERT_SIMILAR_PRODUCT_QUERY = `
     (similar_id, product_id, similar_product_id)
     VALUES ?
 `;
+
+export const DELETE_SIMILAR_PRODUCTS_QUERY = `
+  DELETE FROM similar 
+  WHERE product_id IN ?
+`;

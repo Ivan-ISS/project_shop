@@ -44,6 +44,7 @@ export interface ISimilarProductEntity extends RowDataPacket {
 }
 
 export type ProductAddSimilar = ISimilarProducts[];
+export type ISimilarProductsRemovePayload = string[];
 
 //===========================Для фильтров=============================
 export interface IProductSearchFilter extends IProductFilterPayload {

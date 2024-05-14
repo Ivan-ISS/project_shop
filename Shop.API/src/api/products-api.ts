@@ -9,7 +9,8 @@ import {
     ProductCreatePayload,
     IProductSearchFilter,
     ISimilarProductEntity,
-    ProductAddSimilar
+    ProductAddSimilar,
+    ISimilarProductsRemovePayload
 } from '../../types';
 import { connection } from '../../index';
 import { ioServer } from '../../../index';
@@ -23,7 +24,8 @@ import {
     DELETE_IMAGES_QUERY,
     REPLACE_PRODUCT_THUMBNAIL,
     UPDATE_PRODUCT_FIELDS,
-    INSERT_SIMILAR_PRODUCT_QUERY
+    INSERT_SIMILAR_PRODUCT_QUERY,
+    DELETE_SIMILAR_PRODUCTS_QUERY
 } from '../services/queries';
 import { IProduct } from '@Shared/types';
 import { param, body, validationResult } from "express-validator";
@@ -409,6 +411,31 @@ productsRouter.post('/add-similar-products', async (req: Request<{}, {}, Product
 
         res.status(201);
         res.send('Similar products have been added!');
+    } catch (e) {
+        throwServerError(res, e);
+    }
+});
+
+productsRouter.post('/remove-similar-products', async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {    // ЦЕЛИКОМ
+    try {
+        const similarProductsToRemove = req.body;
+
+        if (!similarProductsToRemove?.length) {
+            res.status(400);
+            res.send('Similar products array is empty');
+            return;
+        }
+
+        const [info] = await connection.query<OkPacket>(DELETE_SIMILAR_PRODUCTS_QUERY, [[similarProductsToRemove]]);
+
+        if (info.affectedRows === 0) {
+            res.status(404);
+            res.send("No one similar product has been removed");
+            return;
+        }
+
+        res.status(201);
+        res.send('Similar products have been removed!');
     } catch (e) {
         throwServerError(res, e);
     }
