@@ -1,0 +1,15 @@
+<div class="product-other">
+    <div class="info">
+        <strong>
+            <%= otherItem.title %>
+        </strong>
+        <div>
+            <%= otherItem.price %>
+        </div>
+    </div>
+
+    <div class="remove-mark">
+        <label for="<%= otherItem.id %>">Add to similar products</label>
+        <input type="checkbox" id="<%= otherItem.id %>" value="<%= otherItem.id %>" name="productAddToSimilar">
+    </div>
+</div>

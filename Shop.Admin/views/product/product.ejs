@@ -51,6 +51,15 @@
         </div>
     <% } %>
 
+    <% if (otherItems.length) { %>
+        <h2>Other products</h2>
+        <div class="product-edit-other">
+            <% otherItems.forEach(function(otherItem) { %>
+                <%- include('product-other', { otherItem: otherItem }) %>
+            <% }); %>
+        </div>
+    <% } %>
+
     <div class="product-edit-footer">
         <button type="submit">Save changes</button>
         <a href="<%= `remove-product/${item.id}` %>">Delete product</a>

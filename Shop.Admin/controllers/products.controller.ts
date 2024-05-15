@@ -74,6 +74,6 @@ productsRouter.post('/save/:id', async (req: Request<{ id: string }, {}, IProduc
         res.redirect(`/${process.env.ADMIN_PATH}/${req.params.id}`);
     //    res.render('product/product', {item: updatedProduct});
     //}
-    // console.log(req.body);
+    console.log(req.body);
     // res.send("OK");
 });

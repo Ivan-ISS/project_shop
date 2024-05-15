@@ -9,7 +9,7 @@ import {
     ProductCreatePayload,
     IProductSearchFilter,
     ISimilarProductEntity,
-    ProductAddSimilar,
+    IAllSimilarProductsRemovePayload,
     ISimilarProductsRemovePayload
 } from '../../types';
 import { connection } from '../../index';
@@ -25,9 +25,10 @@ import {
     REPLACE_PRODUCT_THUMBNAIL,
     UPDATE_PRODUCT_FIELDS,
     INSERT_SIMILAR_PRODUCT_QUERY,
-    DELETE_SIMILAR_PRODUCTS_QUERY
+    DELETE_SIMILAR_PRODUCTS_QUERY,
+    DELETE_ALL_SIMILAR_PRODUCTS_QUERY
 } from '../services/queries';
-import { IProduct } from '@Shared/types';
+import { IProduct, ProductAddSimilar } from '@Shared/types';
 import { param, body, validationResult } from "express-validator";
 
 export const productsRouter = Router();
@@ -382,6 +383,11 @@ productsRouter.get('/similar-product/:id', async (req: Request<{ id: string }>, 
             [req.params.id]
         );
 
+        if (!similarRows?.[0]) {
+            res.send([]);
+            return;
+        }
+
         const similar = mapSimilarProductsEntity(similarRows);
         const similarProductsIds = similar.map(item => item.similarProductId);
 
@@ -398,7 +404,7 @@ productsRouter.get('/similar-product/:id', async (req: Request<{ id: string }>, 
     }
 });
 
-productsRouter.post('/add-similar-products', async (req: Request<{}, {}, ProductAddSimilar>, res: Response) => {  // ЦЕЛИКОМ
+productsRouter.post('/add-similar-products', async (req: Request<{}, {}, ProductAddSimilar[]>, res: Response) => {  // ЦЕЛИКОМ
     try {
         const similarProducts = req.body;
 
@@ -455,7 +461,46 @@ productsRouter.post('/add-similar-products', async (req: Request<{}, {}, Product
     }
 });
 
-productsRouter.post('/remove-similar-products', async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {    // ЦЕЛИКОМ
+productsRouter.post('/remove-similar-products', async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {    // Для удаления выборочных связей товара
+    try {
+        const similarProductsToRemove = req.body;
+
+        const [productRows] = await connection.query<IProductEntity[]> (
+            'SELECT * FROM products WHERE product_id = ?',
+            [similarProductsToRemove.productId]
+        );
+
+        if (!similarProductsToRemove?.similarProductIds?.length) {
+            res.status(400);
+            res.send('Similar products array is empty');
+            return;
+        }
+
+        if (!productRows?.[0]) {
+            res.status(404);
+            res.send(`Product with id ${similarProductsToRemove.productId} is not found`);
+            return;
+        }
+
+        const [info] = await connection.query<OkPacket> (
+            DELETE_SIMILAR_PRODUCTS_QUERY,
+            [similarProductsToRemove.productId, similarProductsToRemove.similarProductIds]
+        );
+
+        if (info.affectedRows === 0) {
+            res.status(404);
+            res.send('No one similar product has been removed');
+            return;
+        }
+
+        res.status(201);
+        res.send('Similar products have been removed!');
+    } catch (e) {
+        throwServerError(res, e);
+    }
+});
+
+productsRouter.post('/remove-all-similar-products', async (req: Request<{}, {}, IAllSimilarProductsRemovePayload>, res: Response) => {    // Для удаления всех связей товара
     try {
         const similarProductsToRemove = req.body;
 
@@ -465,7 +510,7 @@ productsRouter.post('/remove-similar-products', async (req: Request<{}, {}, ISim
             return;
         }
 
-        const [info] = await connection.query<OkPacket>(DELETE_SIMILAR_PRODUCTS_QUERY, [[similarProductsToRemove]]);
+        const [info] = await connection.query<OkPacket>(DELETE_ALL_SIMILAR_PRODUCTS_QUERY, [[similarProductsToRemove]]);
 
         if (info.affectedRows === 0) {
             res.status(404);

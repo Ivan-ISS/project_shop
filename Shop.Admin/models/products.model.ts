@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IProduct, IProductFilterPayload } from '@Shared/types';
+import { IProduct, IProductFilterPayload, ProductAddSimilar } from '@Shared/types';
 import { IProductEditData } from '../types';
 import { API_HOST } from './const';
 
@@ -28,13 +28,23 @@ export async function removeProduct(id: string): Promise<void> {
 
 
 function compileIdsToRemove(data: string | string[]): string[] {
-    if (typeof data === "string") return [data];
+    if (typeof data === 'string') return [data];
     return data;
 }
 
 function splitNewImages(data = ''): string[] {
     return data.trim().split(/\r\n|,/g);
     // return data.split(/\r\n|,/g).map(url => url.trim()).filter(url => url);
+}
+
+function compileSimilarProductsToAdd(productId: string, similarProducts: string | string[]): ProductAddSimilar[] {
+    if (typeof similarProducts === 'string') similarProducts = [similarProducts];
+    const data: ProductAddSimilar[] = similarProducts.map((similarProduct) => ({
+        ...data,
+        productId: productId,
+        similarProductId: similarProduct
+    }))
+    return data;
 }
 
 export async function updateProduct(productId: string, formData: IProductEditData): Promise<IProduct | null> {
@@ -75,15 +85,25 @@ export async function updateProduct(productId: string, formData: IProductEditDat
             await axios.post(`${API_HOST}/products/update-thumbnail/${productId}`, { newThumbnailId: `${formData.mainImage}` });
         }
 
+        if (formData.productAddToSimilar) {
+            const similarProducts = compileSimilarProductsToAdd(productId, formData.productAddToSimilar);
+            await axios.post(`${API_HOST}/products/add-similar-products`, similarProducts);
+        }
+
+        if (formData.similarProductToRemove) {
+            const similarProductsIdsToRemove = compileIdsToRemove(formData.similarProductToRemove);
+            await axios.post(`${API_HOST}/products/remove-similar-products`, { productId: productId, similarProductIds: similarProductsIdsToRemove });
+        }
+
         await axios.patch(`${API_HOST}/products/${productId}`, {
             title: formData.title,
             description: formData.description,
             price: Number(formData.price)
-          });
+        });
 
         return currentProduct;
     } catch (e) {
-        console.log(e); // фиксируем ошибки, которые могли возникнуть в процессе
+        console.log(e);
     }
 }
 
@@ -93,8 +113,9 @@ export async function updateProduct(productId: string, formData: IProductEditDat
 export async function getSimilarProducts(id: string): Promise<IProduct[] | null> {
     try {
         const { data } = await axios.get<IProduct[]> (`${API_HOST}/products/similar-product/${id}`);
-        return data || null;
+        return data || [];
     } catch (e) {
+        console.log(e);
         return null;
     }
 }
@@ -104,13 +125,19 @@ export async function getOtherProducts(id: string): Promise<IProduct[] | null> {
         const allProducts = await getProducts();
         const similarProducts = await getSimilarProducts(id);
 
+        if (!similarProducts?.[0]) {
+            const otherProducts = allProducts.filter(product => product.id !== id);
+            return otherProducts || [];
+        }
+
         const otherProducts = allProducts.filter(product =>
-            similarProducts.some(similarProduct => product.id !== similarProduct.id) &&
+            !similarProducts.some(similarProduct => product.id === similarProduct.id) &&
             (product.id !== id)
         );
 
-        return otherProducts || null;
+        return otherProducts || [];
     } catch (e) {
+        console.log(e);
         return null;
     }
 }
