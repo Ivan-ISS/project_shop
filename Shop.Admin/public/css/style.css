@@ -136,6 +136,22 @@ body {
     text-align: center;
 }
 
+.product-edit-similar {
+    padding: 10px 15px;
+    border-bottom: 1px solid #00B1FFFF;
+}
+
+.product-edit-similar .product-similar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.product-edit-similar .product-similar .info {
+    display: flex;
+    gap: 85px;
+}
+
 .product-edit-footer {
     margin-top: 60px;
 }

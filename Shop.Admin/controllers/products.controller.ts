@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { getProducts, searchProducts, getProduct, removeProduct, updateProduct } from '../models/products.model';
+import { getProducts, getSimilarProducts, getOtherProducts, searchProducts, getProduct, removeProduct, updateProduct } from '../models/products.model';
 import { throwServerError } from './helper';
 import { IProductFilterPayload } from '@Shared/types';
 import { IProductEditData } from '../types';
@@ -35,9 +35,15 @@ productsRouter.get('/search', async (req: Request<{}, {}, {}, IProductFilterPayl
 productsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) => {
     try {
         const product = await getProduct(req.params.id);
+        const similarProducts = await getSimilarProducts(req.params.id);
+        const otherProducts = await getOtherProducts(req.params.id);
 
         if (product) {
-            res.render('product/product', {item: product});
+            res.render('product/product', {
+                item: product,
+                similarItems: similarProducts,
+                otherItems: otherProducts
+            });
         } else {
             res.render('product/empty-product', {id: req.params.id});
         }

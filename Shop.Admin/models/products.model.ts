@@ -86,3 +86,31 @@ export async function updateProduct(productId: string, formData: IProductEditDat
         console.log(e); // фиксируем ошибки, которые могли возникнуть в процессе
     }
 }
+
+//===========================================================================
+//====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
+
+export async function getSimilarProducts(id: string): Promise<IProduct[] | null> {
+    try {
+        const { data } = await axios.get<IProduct[]> (`${API_HOST}/products/similar-product/${id}`);
+        return data || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+export async function getOtherProducts(id: string): Promise<IProduct[] | null> {
+    try {
+        const allProducts = await getProducts();
+        const similarProducts = await getSimilarProducts(id);
+
+        const otherProducts = allProducts.filter(product =>
+            similarProducts.some(similarProduct => product.id !== similarProduct.id) &&
+            (product.id !== id)
+        );
+
+        return otherProducts || null;
+    } catch (e) {
+        return null;
+    }
+}

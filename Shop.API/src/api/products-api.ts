@@ -141,7 +141,7 @@ productsRouter.post('/', async (req: Request<{}, {}, ProductCreatePayload>, res:
         }                                                               //
 
         const [products] = await connection.query<RowDataPacket[]> ("SELECT * FROM products");
-        ioServer.emit("update products count", products?.length || 0);
+        ioServer.emit('update products count', products?.length || 0);
 
         res.status(201);
         res.send(`Product id:${id} has been added!`);
@@ -334,18 +334,23 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
             return;                                                         //
         }                                                                   //
 
-        await connection.query < OkPacket > (               //
-            "DELETE FROM comments WHERE product_id = ?",    //
+        await connection.query<OkPacket> (                  //
+            'DELETE FROM comments WHERE product_id = ?',    //
             [req.params.id]                                 //
         );                                                  //
 
-        await connection.query < OkPacket > (               //
-            "DELETE FROM images WHERE product_id = ?",      //
+        await connection.query<OkPacket> (                  //
+            'DELETE FROM images WHERE product_id = ?',      //
             [req.params.id]                                 //
         );                                                  //
 
-        await connection.query < OkPacket > (
-            "DELETE FROM products WHERE product_id = ?",
+        await connection.query<OkPacket> (
+            'DELETE FROM similar WHERE product_id = ?',
+            [req.params.id]
+        );
+
+        await connection.query<OkPacket> (
+            'DELETE FROM products WHERE product_id = ?',
             [req.params.id]
         );
 
@@ -372,7 +377,7 @@ productsRouter.get('/similar-product/:id', async (req: Request<{ id: string }>, 
             return;
         }
 
-        const [similarRows] = await connection.query<ISimilarProductEntity[]> (
+        const [similarRows] = await connection.query<ISimilarProductEntity[]> (     // 1-й запрос на получение id похожих товаров
             'SELECT * FROM similar WHERE product_id = ?',
             [req.params.id]
         );
@@ -380,7 +385,7 @@ productsRouter.get('/similar-product/:id', async (req: Request<{ id: string }>, 
         const similar = mapSimilarProductsEntity(similarRows);
         const similarProductsIds = similar.map(item => item.similarProductId);
 
-        const [similarProductRows] = await connection.query<IProductEntity[]> (
+        const [similarProductRows] = await connection.query<IProductEntity[]> (     // 2-й запрос на получение похожих товаров по вышеполученным id
             'SELECT * FROM products WHERE product_id IN ?',
             [[similarProductsIds]]
         );
