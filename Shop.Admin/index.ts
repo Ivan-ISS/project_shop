@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import bodyParser from 'body-parser';
 import { productsRouter } from './controllers/products.controller';
 import { authRouter, validateSession } from './controllers/auth.controller';
@@ -16,6 +16,11 @@ export default function (): Express {
 
     app.use(express.json());
     app.use(bodyParser.urlencoded({ extended: false }));
+
+    app.use((req: Request, res: Response, next: NextFunction) => {
+        res.locals.showHeaderMenu = true;
+        next();
+    })
 
     app.set('view engine', 'ejs');
     app.set('views', 'Shop.Admin/views');

@@ -371,8 +371,20 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
 });
 
 //====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
-productsRouter.get('/similar-product/:id', async (req: Request<{ id: string }>, res: Response) => {
+productsRouter.get('/similar-product/:id',
+    [
+        param('id').isUUID().withMessage('Similar product id is not UUID')
+    ],
+    async (req: Request<{ id: string }>, res: Response) => {
     try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400);
+            res.json({ errors: errors.array() });
+            return;
+        }
+
         const [productRows] = await connection.query<IProductEntity[]> (
             'SELECT * FROM products WHERE product_id = ?',
             [req.params.id]

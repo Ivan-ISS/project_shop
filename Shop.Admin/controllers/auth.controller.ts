@@ -7,6 +7,7 @@ export const authRouter = Router();
 
 authRouter.get('/login', async (req: Request, res: Response) => {
     try {
+        res.locals.showHeaderMenu = false;
         res.render('login');
     } catch (e) {
         throwServerError(res, e);
@@ -18,7 +19,7 @@ authRouter.post('/authenticate', async (req: Request<{}, {}, IAuthRequisites>,re
         const verified = await verifyRequisites(req.body);
 
         if (verified) {
-            req.session.username = req.body.username;   // ДОПОЛНИТЕЛЬНО ПРИШЛОСЬ СДЕЛАТЬ
+            req.session.username = req.body.username;
             res.redirect(`/${process.env.ADMIN_PATH}`);
         } else {
             res.redirect(`/${process.env.ADMIN_PATH}/auth/login`);
