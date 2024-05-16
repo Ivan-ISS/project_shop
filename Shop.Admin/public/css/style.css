@@ -9,10 +9,28 @@ body {
 .header {
     padding: 20px 40px;
     border-bottom: 1px solid #00b1ffff;
+    column-gap: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header a {
+    text-decoration: none;
+    color: #000;
+}
+
+.header a:hover {
+    font-weight: 700;
+}
+
+.menu {
+    display: flex;
+    column-gap: 25px;
 }
 
 .logo {
-    width: 100px;
+    min-width: 100px;
     height: 100px;
     background: url('../img/logo.png');
     background-size: 100px 100px;
@@ -47,6 +65,7 @@ body {
 
 .product-item {
     display: flex;
+    transition: 0.3s ease;
 }
 
 .product-item .image {
@@ -54,10 +73,16 @@ body {
     height: 100px;
     margin-right: 20px;
     border: 1px solid #d0d0d0;
+    box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.555);
+}
+
+.product-item .image:hover {
+    box-shadow: 0 0 5px 3px rgb(199, 0, 0, 0.555);
 }
 
 .product-item .image img {
     max-width: 100%;
+    background: #464646;
 }
 
 .product-item .title {
@@ -173,6 +198,26 @@ body {
     justify-content: space-between;
     width: 30%;
 }
+
+/*Форма для создания товара ====================== */
+.product-create-fields {
+    width: 50%;
+}
+
+.product-create-fields .field {
+    margin-bottom: 20px;
+}
+
+.product-create-fields .field input,
+.product-create-fields .field textarea {
+    width: 100%;
+}
+
+.product-create-fields .field label {
+    display: block;
+    margin-bottom: 5px;
+}
+
 
 .product-edit-footer {
     margin-top: 60px;

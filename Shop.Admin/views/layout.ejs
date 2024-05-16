@@ -11,11 +11,11 @@
 <body>
     <header class="header">
         <div class="logo"></div>
-        <div>
-            <a href="<%= `/${process.env.ADMIN_PATH}` %>/auth/logout">LOGOUT</a>
-            <a href="<%= `/${process.env.ADMIN_PATH}` %>/new-product">Add product</a>
-            <a href="<%= `/${process.env.ADMIN_PATH}` %>/">List of products</a>
+        <div class="menu">
+            <a href="<%= `/${process.env.ADMIN_PATH}` %>/">RETURN TO ALL PRODUCTS</a>
+            <a href="<%= `/${process.env.ADMIN_PATH}` %>/new-product">ADD PRODUCT</a>
         </div>
+        <a href="<%= `/${process.env.ADMIN_PATH}` %>/auth/logout">LOGOUT</a>
     </header>
 
     <div class="container">

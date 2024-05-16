@@ -32,7 +32,9 @@
     <% items.forEach(function(product) { %>
         <div class="product-item">
             <div class="image">
-                <img src="<%= product.thumbnail?.url || "img/product-placeholder.png" %>" alt="<%= product.title %>">
+                <a href="<%= `${product.id}` %>">
+                    <img src="<%= product.thumbnail?.url || "img/product-placeholder.png" %>" alt="<%= product.title %>">
+                </a>
             </div>
             <div class="info">
                 <a class="title" href="<%= `${product.id}` %>">
