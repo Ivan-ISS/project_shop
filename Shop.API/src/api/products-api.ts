@@ -373,7 +373,7 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
 //====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
 productsRouter.get('/similar-product/:id',
     [
-        param('id').isUUID().withMessage('Similar product id is not UUID')
+        param('id').isUUID().withMessage('Similar product id is not UUID'),
     ],
     async (req: Request<{ id: string }>, res: Response) => {
     try {
@@ -422,8 +422,21 @@ productsRouter.get('/similar-product/:id',
     }
 });
 
-productsRouter.post('/add-similar-products', async (req: Request<{}, {}, ProductAddSimilar[]>, res: Response) => {  // ЦЕЛИКОМ
+productsRouter.post('/add-similar-products',
+    [
+        body('*.productId').isUUID().withMessage('Product id is not UUID'),
+        body('*.similarProductId').isUUID().withMessage('Similar product id is not UUID')
+    ],
+    async (req: Request<{}, {}, ProductAddSimilar[]>, res: Response) => {
     try {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400);
+            res.json({ errors: errors.array() });
+            return;
+        }
+
         const similarProducts = req.body;
 
         if (!similarProducts?.length) {
@@ -479,8 +492,20 @@ productsRouter.post('/add-similar-products', async (req: Request<{}, {}, Product
     }
 });
 
-productsRouter.post('/remove-similar-products', async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {    // Для удаления выборочных связей товара
+productsRouter.post('/remove-similar-products',
+    [
+        body('productId').isUUID().withMessage('Product id is not UUID'),
+        body('similarProductIds').isUUID().withMessage('Similar product id is not UUID'),
+    ],
+    async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {    // Для удаления выборочных связей товара
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400);
+            res.json({ errors: errors.array() });
+            return;
+        }
+
         const similarProductsToRemove = req.body;
 
         const [productRows] = await connection.query<IProductEntity[]> (
