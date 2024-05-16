@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { getProducts, getSimilarProducts, getOtherProducts, searchProducts, getProduct, removeProduct, updateProduct } from '../models/products.model';
+import { getProducts, getSimilarProducts, getOtherProducts, searchProducts, getProduct, removeProduct, updateProduct, createProduct } from '../models/products.model';
 import { throwServerError } from './helper';
-import { IProductFilterPayload } from '@Shared/types';
+import { ProductCreatePayload, IProductFilterPayload } from '@Shared/types';
 import { IProductEditData } from '../types';
 
 export const productsRouter = Router();
@@ -19,6 +19,16 @@ productsRouter.get('/', async (req: Request, res: Response) => {    // Полу�
         throwServerError(res, e);
     }
 });
+
+//====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
+productsRouter.get('/new-product', async (req: Request, res: Response) => {
+    try {
+        res.render('product-new');
+    } catch (e) {
+        throwServerError(res, e);
+    }
+});
+//===========================================================================
 
 productsRouter.get('/search', async (req: Request<{}, {}, {}, IProductFilterPayload>, res: Response) => {
     try {
@@ -54,7 +64,6 @@ productsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) =
 
 productsRouter.get('/remove-product/:id', async (req: Request<{ id: string }>, res: Response) => {
     try {
-
         if (req.session.username !== "admin") {
             res.status(403);
             res.send('Forbidden');
@@ -69,11 +78,22 @@ productsRouter.get('/remove-product/:id', async (req: Request<{ id: string }>, r
 });
 
 productsRouter.post('/save/:id', async (req: Request<{ id: string }, {}, IProductEditData>, res: Response) => {
-    const updatedProduct = await updateProduct(req.params.id, req.body);
-    //if (updatedProduct) {
+    try {
+        await updateProduct(req.params.id, req.body);
         res.redirect(`/${process.env.ADMIN_PATH}/${req.params.id}`);
-    //    res.render('product/product', {item: updatedProduct});
-    //}
-    console.log(req.body);
-    // res.send("OK");
+        // console.log(req.body);
+    } catch (e) {
+        throwServerError(res, e);
+    }
 });
+
+//====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
+productsRouter.post('/create-product', async (req: Request<{}, {}, ProductCreatePayload>, res: Response) => {
+    try {
+        const createdProduct = await createProduct(req.body);
+        res.redirect(`/${process.env.ADMIN_PATH}/${createdProduct.id}`);
+    } catch (e) {
+        throwServerError(res, e);
+    }
+});
+//===========================================================================

@@ -31,6 +31,8 @@ export interface IProduct {
     thumbnail?: IImage;
 }
 
+export type ProductCreatePayload = Omit<IProduct, 'id' | 'comments' | 'thumbnail'>;
+
 export interface IProductFilterPayload {
     title?: string;
     description?: string;

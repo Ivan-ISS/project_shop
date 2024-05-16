@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IProduct, IProductFilterPayload, ProductAddSimilar } from '@Shared/types';
+import { IProduct, ProductCreatePayload, IProductFilterPayload, ProductAddSimilar } from '@Shared/types';
 import { IProductEditData } from '../types';
 import { API_HOST } from './const';
 
@@ -107,9 +107,7 @@ export async function updateProduct(productId: string, formData: IProductEditDat
     }
 }
 
-//===========================================================================
 //====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
-
 export async function getSimilarProducts(id: string): Promise<IProduct[] | null> {
     try {
         const { data } = await axios.get<IProduct[]> (`${API_HOST}/products/similar-product/${id}`);
@@ -141,3 +139,18 @@ export async function getOtherProducts(id: string): Promise<IProduct[] | null> {
         return null;
     }
 }
+
+export async function createProduct(formData: ProductCreatePayload): Promise<IProduct | null> {
+    try {
+        const { data } = await axios.post<IProduct> (`${API_HOST}/products`, {
+            title: formData.title,
+            description: formData.description,
+            price: Number(formData.price)
+        });
+
+        return data || null;
+    } catch (e) {
+        console.log(e);
+    }
+}
+//===========================================================================

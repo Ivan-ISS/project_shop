@@ -34,8 +34,6 @@ export interface IProductEntity extends IProduct, RowDataPacket {
     product_id: string;
 }
 
-export type ProductCreatePayload = Omit<IProduct, 'id' | 'comments' | 'thumbnail'>;
-
 //=========================Похожие продукты===========================
 export interface ISimilarProductEntity extends RowDataPacket {
     similar_id: string;

@@ -6,7 +6,6 @@ import {
     ProductAddImagesPayload,
     ImagesRemovePayload,
     IProductEntity,
-    ProductCreatePayload,
     IProductSearchFilter,
     ISimilarProductEntity,
     IAllSimilarProductsRemovePayload,
@@ -28,7 +27,7 @@ import {
     DELETE_SIMILAR_PRODUCTS_QUERY,
     DELETE_ALL_SIMILAR_PRODUCTS_QUERY
 } from '../services/queries';
-import { IProduct, ProductAddSimilar } from '@Shared/types';
+import { IProduct, ProductCreatePayload, ProductAddSimilar } from '@Shared/types';
 import { param, body, validationResult } from "express-validator";
 
 export const productsRouter = Router();
@@ -141,11 +140,19 @@ productsRouter.post('/', async (req: Request<{}, {}, ProductCreatePayload>, res:
             }                                                           //
         }                                                               //
 
+        const [productRow] = await connection.query<IProductEntity[]> (
+            'SELECT * FROM products WHERE product_id = ?',
+            [id]
+        );
+
+        const createdProduct = mapProductsEntity(productRow)[0];
+
         const [products] = await connection.query<RowDataPacket[]> ("SELECT * FROM products");
         ioServer.emit('update products count', products?.length || 0);
 
         res.status(201);
-        res.send(`Product id:${id} has been added!`);
+        res.send(createdProduct);
+        //res.send(`Product id:${id} has been added!`);
     } catch (e) {
         throwServerError(res, e);
     }
@@ -323,6 +330,7 @@ productsRouter.patch('/:id', async (req: Request<{ id: string }, {}, ProductCrea
 
 productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
     try {
+        console.log('Удаляем ', req.params.id)
 
         const [rows] = await connection.query<IProductEntity[]> (           //
             'SELECT * FROM products WHERE product_id = ?',                  //
@@ -362,9 +370,7 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
     }
 });
 
-//===========================================================================
 //====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
-
 productsRouter.get('/similar-product/:id', async (req: Request<{ id: string }>, res: Response) => {
     try {
         const [productRows] = await connection.query<IProductEntity[]> (
@@ -524,3 +530,4 @@ productsRouter.post('/remove-all-similar-products', async (req: Request<{}, {}, 
         throwServerError(res, e);
     }
 });
+//===========================================================================
