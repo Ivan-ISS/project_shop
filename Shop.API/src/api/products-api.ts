@@ -13,8 +13,20 @@ import {
 } from '../../types';
 import { connection } from '../../index';
 import { ioServer } from '../../../index';
-import { mapCommentsEntity, mapImageEntity, mapImagesEntity, mapProductsEntity, mapSimilarProductsEntity } from '../services/mapping';
-import { throwServerError, enhanceProductsComments, enhanceProductsImages, getProductsFilterQuery, checkArraysForMatchingValues } from '../helpers';
+import {
+    mapCommentsEntity,
+    mapImageEntity,
+    mapImagesEntity,
+    mapProductsEntity,
+    mapSimilarProductsEntity
+} from '../services/mapping';
+import {
+    throwServerError,
+    enhanceProductsComments,
+    enhanceProductsImages,
+    getProductsFilterQuery,
+    checkArraysForMatchingValues
+} from '../helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { OkPacket, RowDataPacket } from 'mysql2';
 import {
@@ -36,11 +48,11 @@ productsRouter.get('/', async (req: Request, res: Response) => {
     try {
         const [productRows] = await connection.query<IProductEntity[]> ('SELECT * FROM products');
         const [commentRows] = await connection.query<ICommentEntity[]> ('SELECT * FROM comments');
-        const [imageRows] = await connection.query<IImageEntity[]> ('SELECT * FROM images');            //
+        const [imageRows] = await connection.query<IImageEntity[]> ('SELECT * FROM images');
     
         const products = mapProductsEntity(productRows);
         const withComments = enhanceProductsComments(products, commentRows);
-        const withImages = enhanceProductsImages(withComments, imageRows);                              //
+        const withImages = enhanceProductsImages(withComments, imageRows);
     
         res.send(withImages);
     } catch (e) {
