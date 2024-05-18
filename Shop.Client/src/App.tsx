@@ -1,10 +1,8 @@
-
+import Layout from './Components/Layout/layout';
 
 export default function App() {
 
     return (
-        <div>
-            React App!!!!!
-        </div>
+        <Layout/>
     );
 }
