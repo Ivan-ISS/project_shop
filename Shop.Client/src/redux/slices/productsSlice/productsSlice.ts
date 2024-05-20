@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { IProduct } from '@Shared/types';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import routes from '../../../routes';
 
 interface FetchProductsError {

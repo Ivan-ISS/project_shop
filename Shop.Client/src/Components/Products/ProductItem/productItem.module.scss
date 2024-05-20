@@ -1,0 +1,104 @@
+@import "/src/styles/_colors";
+@import "/src/styles/_variables";
+
+.productItem {
+    display: flex;
+    column-gap: 20px;
+    cursor: pointer;
+
+    &:hover .productInfo .productTitle {
+        text-shadow: 
+                    0.2px 0.2px 1px rgba(0, 0, 0, 0.355),
+                    -0.2px -0.2px 1px rgba(0, 0, 0, 0.355),
+                    0.2px -0.2px 1px rgba(0, 0, 0, 0.355),
+                    -0.2px 0.2px 1px rgba(0, 0, 0, 0.355);
+    }
+
+    &:hover .productImage {
+        box-shadow: 0 0 5px 3px rgb(0, 0, 0, 0.855);
+    }
+
+    .productImage {
+        border: 1px solid $base-black;
+        box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.555);
+        max-width: 100px;
+        max-height: 100px;
+        flex-shrink: 0;
+        transition: 0.3s ease;
+
+        img {
+            width: 100%;
+            height: 100%;
+            background: #464646;
+            object-fit: cover;
+        }
+    }
+
+    .productInfo {
+        min-width: 100px;
+
+        .productTitle {
+            display: block;
+            color: inherit;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            max-height: 23px;
+
+            transition: 0.3s ease;
+        }
+    
+        .productLabel {
+            font-weight: 600;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+
+    .productItem {
+        column-gap: 10px;
+
+        .productImage {
+            min-width: 70px;
+            min-height: 70px;
+            flex-shrink: 1;
+        }
+
+        .productInfo {
+            font-size: 14px;
+            max-width: 100px;
+            
+            .productTitle {
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+
+    .productItem {
+        column-gap: 7.5px;
+
+        .productImage {
+            min-width: 50px;
+            min-height: 50px;
+            flex-shrink: 1;
+        }
+
+        .productInfo {
+            min-width: 70px;
+            font-size: 10px;
+            
+            .productTitle {
+                font-size: 12px;
+            }
+        }
+    }
+}

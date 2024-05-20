@@ -30,7 +30,7 @@ export default function Home() {
 
     const handleClickToAdminSystem = () => {
         //navigate('admin/auth/login');
-        window.location.href = 'http://localhost:8000/admin/auth/login';
+        window.open('http://localhost:8000/admin/auth/login', '_blank');
     };
 
     return (

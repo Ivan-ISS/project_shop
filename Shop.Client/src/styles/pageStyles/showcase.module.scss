@@ -7,27 +7,19 @@
     margin-bottom: 50px;
 }
 
-.buttonPanel {
-    display: flex;
-    justify-content: space-between;
-    gap: 25px;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.info {
-    margin-bottom: 50px;
-}
-
 .textDecor {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 48px;
+    font-weight: 900;
 }
 
 @media (max-width: 768px) {
 
     .title {
         font-size: 32px;
+    }
+
+    .textDecor {
+        font-size: 36px;
     }
     
 }

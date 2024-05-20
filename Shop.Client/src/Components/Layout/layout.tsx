@@ -11,7 +11,7 @@ export default function Layout() {
             <Header>
                 <Link to={'/'}>
                     <div className={styles.wrapLogo}>
-                        <img className={styles.logo} src="images/logo.png" alt="logo"/>
+                        <img className={styles.logo} src="images/png/logo.png" alt="logo"/>
                         <p className={styles.textLogo}>Phoneshop</p>
                     </div>
                 </Link>
