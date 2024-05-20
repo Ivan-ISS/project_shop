@@ -1,6 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { IProduct } from '@Shared/types';
 
-export const fetchProducts = createAsyncThunk(
+interface FetchProductsError {
+    message: string; 
+}
+
+export const fetchProducts = createAsyncThunk<IProduct[], void, { rejectValue: FetchProductsError | undefined }>(
     'products/fetch',
     async (_, thunkAPI) => {
         try {
@@ -9,18 +14,24 @@ export const fetchProducts = createAsyncThunk(
             console.log('here ', data);
             return data;
         } catch (error) {
-            return thunkAPI.rejectWithValue(error);
+            return thunkAPI.rejectWithValue({ message: error } as FetchProductsError);
         }
     }
 );
+
+export interface IState {
+    products: IProduct[];
+    status: 'not started' | 'in progress' | 'successfully' | 'download faild';
+    error: string;
+}
 
 const productsSlice = createSlice({
     name: 'products',
     initialState: {
         products: [],
-        status: '',
+        status: 'not started',
         error: '',
-    },
+    } as IState,
     reducers: {
 
     },
@@ -29,13 +40,15 @@ const productsSlice = createSlice({
             addCase(fetchProducts.pending, (state) => {
                 state.status = 'in progress';
             })
-            .addCase(fetchProducts.fulfilled, (state, action) => {
+            .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<IProduct[]>) => {
                 state.status = 'successfully';
                 state.products = action.payload;
             })
-            .addCase(fetchProducts.rejected, (state/* , action */) => {
+            .addCase(fetchProducts.rejected, (state, action: PayloadAction<FetchProductsError | undefined>) => {
                 state.status = 'download faild';
-                //state.error = action.payload.message;
+                if (action.payload) {
+                    state.error = action.payload.message;
+                }
             });
     }
 });

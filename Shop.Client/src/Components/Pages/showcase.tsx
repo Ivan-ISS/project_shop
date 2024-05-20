@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { selectProducts } from '../../redux/slices/productsSlice/productsSelectors';
 import { fetchProducts } from '../../redux/slices/productsSlice/productsSlice';
-import { useNavigate } from 'react-router-dom';
 
 export default function Showcase() {
     const navigate = useNavigate();
@@ -17,9 +17,11 @@ export default function Showcase() {
         <h1>
             Showcase
             {products.map((product, index) => (
-                <p key={index}>{product.id}</p>
+                <div key={index}>
+                    <p>{product.id}</p>
+                    <p onClick={() => navigate(`/${product.id}`)}>productClick</p>
+                </div>
             ))}
-            <p onClick={() => navigate('/12345')}>productClick</p>
         </h1>
     );
 }
