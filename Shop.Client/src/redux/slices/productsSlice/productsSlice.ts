@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { IProduct } from '@Shared/types';
+import routes from '../../../routes';
 
 interface FetchProductsError {
     message: string; 
@@ -9,9 +10,9 @@ export const fetchProducts = createAsyncThunk<IProduct[], void, { rejectValue: F
     'products/fetch',
     async (_, thunkAPI) => {
         try {
-            const response = await fetch('http://localhost:8000/api/products');
+            const response = await fetch(routes.url());
             const data = await response.json();
-            console.log('here ', data);
+            console.log('Response data: ', data);
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue({ message: error } as FetchProductsError);

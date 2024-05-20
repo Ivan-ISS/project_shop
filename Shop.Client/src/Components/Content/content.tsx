@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
-import routes from '../../routes';
 import Home from '../Pages/home';
 import Showcase from '../Pages/showcase';
 import Product from '../Pages/product';
 import NotFound from '../Pages/notFound';
+import routes from '../../routes';
 
 export default function Default() {
 

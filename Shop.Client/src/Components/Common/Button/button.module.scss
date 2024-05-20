@@ -1,0 +1,47 @@
+@import "/src/styles/_colors";
+@import "/src/styles/_variables";
+
+
+.button {
+    cursor: pointer;
+    text-transform: uppercase;
+    border: none;
+    font-family: inherit;
+    font-weight: 700;
+    max-width: 250px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.big {
+    font-size: 12px;
+    padding: 8px 5px;
+}
+
+.small {
+    font-size: 8px;
+    padding: 18px 5px;
+}
+
+.white {
+    background: $base-white;
+    border: solid 1px $base-black;
+    color: $base-black;
+
+    &:hover {
+        color: $base-white;
+        background: $base-black;
+        box-shadow: 1px 2px 5px rgba($base-black, 0.4);
+    }
+}
+
+.black {
+    background: $base-black;
+    color: $base-white;
+
+    &:hover {
+        color: $base-black;
+        background: $base-white;
+        box-shadow: 1px 2px 5px rgba($base-black, 0.4);
+    }
+}

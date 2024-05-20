@@ -10,9 +10,9 @@
     .container {
         max-width: 1120px;
         min-width: 300px;
-        min-height: 116px;
+        min-height: 100px;
         margin: 0 auto;
-        padding: 0px 75px;
+        padding: 10px 75px;
         box-sizing: content-box;
         display: flex;
         align-items: center;
@@ -20,13 +20,13 @@
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
 
     .header {
         
         .container {
             min-height: 70px;
-            padding: 0px 15px;
+            padding: 10px 15px;
         }
     }
 }
