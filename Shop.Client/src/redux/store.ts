@@ -1,10 +1,12 @@
 import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { productsSlice } from './slices/productsSlice/productsSlice';
+import { filtersSlice } from './slices/filtersSlice/filtersSlice';
 
 const store = configureStore({
     reducer: {
-        products: productsSlice.reducer
+        products: productsSlice.reducer,
+        filters: filtersSlice.reducer,
     }
 });
 

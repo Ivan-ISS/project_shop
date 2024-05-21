@@ -1,6 +1,8 @@
 import { IProduct } from '@Shared/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { applyFilters } from '../filtersSlice/filtersSlice';
 import routes from '../../../routes';
+import filterProducts from '../../../utils/filterProducts';
 
 interface FetchProductsError {
     message: string; 
@@ -21,6 +23,7 @@ export const fetchProducts = createAsyncThunk<IProduct[], void, { rejectValue: F
 );
 
 export interface IState {
+    initialProducts: IProduct[];
     products: IProduct[];
     status: 'not started' | 'in progress' | 'successfully' | 'download faild';
     error: string;
@@ -29,6 +32,7 @@ export interface IState {
 const productsSlice = createSlice({
     name: 'products',
     initialState: {
+        initialProducts: [],
         products: [],
         status: 'not started',
         error: '',
@@ -37,12 +41,13 @@ const productsSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        builder.
-            addCase(fetchProducts.pending, (state) => {
+        builder
+            .addCase(fetchProducts.pending, (state) => {
                 state.status = 'in progress';
             })
             .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<IProduct[]>) => {
                 state.status = 'successfully';
+                state.initialProducts = action.payload;
                 state.products = action.payload;
             })
             .addCase(fetchProducts.rejected, (state, action: PayloadAction<FetchProductsError | undefined>) => {
@@ -50,6 +55,12 @@ const productsSlice = createSlice({
                 if (action.payload) {
                     state.error = action.payload.message;
                 }
+            })
+            .addCase(applyFilters, (state, action) => {
+                state.products = state.initialProducts;
+                const filteredProducts = filterProducts(state.products, action.payload);
+                state.products = filteredProducts;
+                console.log('Отслеживаем: ', action.payload);
             });
     }
 });

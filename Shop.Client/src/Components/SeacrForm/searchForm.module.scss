@@ -1,0 +1,16 @@
+@import "/src/styles/_colors";
+@import "/src/styles/_variables";
+
+
+.searchFrom {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+    margin-bottom: 70px;
+
+    .productsSearch {
+        display: flex;
+        column-gap: 20px;
+        flex-wrap: wrap;
+    }
+}
