@@ -502,9 +502,9 @@ productsRouter.post('/add-similar-products',
 });
 
 productsRouter.post('/remove-similar-products',
-    /* [
+    [
         body().custom(validateRemoveSimilarProductsBody),
-    ], */
+    ],
     async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {
     try {
         const errors = validationResult(req);
@@ -523,11 +523,9 @@ productsRouter.post('/remove-similar-products',
 
         if (!productRows?.[0]) {
             res.status(404);
-            res.send(`Product with id ${similarProductsToRemove} is not found`);
+            res.send(`Product with id ${similarProductsToRemove.productId} is not found`);
             return;
         }
-
-        console.log('К удалению ', similarProductsToRemove);
 
         const [info] = await connection.query<OkPacket> (
             DELETE_SIMILAR_PRODUCTS_QUERY,
@@ -552,7 +550,7 @@ productsRouter.post('/remove-similar',
         body().custom(validateRemoveSimilarProductsBody),
     ],
     async (req: Request<{}, {}, IAllSimilarProductsRemovePayload>, res: Response) => {     // Этот метод реализован в соответствии с требованиями задания - но он не корректен
-    try {                                                                               // т.к. удаляет все связи выбранного товара с похожими товарами
+    try {                                                                                   // т.к. удаляет все связи выбранного товара с похожими товарами
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(400);

@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { IComment, IProduct, IImage, ProductsAddSimilar } from "@Shared/types";
-import { ICommentEntity, IImageEntity, CommentCreatePayload, IProductSearchFilter } from '../types';
+import { ICommentEntity, IImageEntity, CommentCreatePayload, IProductSearchFilter, ISimilarProductsRemovePayload } from '../types';
 import { readFile, writeFile } from 'fs/promises';
 import { mapCommentEntity, mapImageEntity } from './services/mapping';
 import { isUUID } from 'validator';
@@ -198,16 +198,26 @@ export const validateAddSimilarProductsBody = (items: ProductsAddSimilar = []): 
 
 //=============================================================================
 //=========ВАЛИДАЦИЯ ВХОДНЫХ ДАННЫХ ДЛЯ ПОХОЖИХ ТОВАРОВ ПРИ УДАЛЕНИИ=========
-export const validateRemoveSimilarProductsBody = (items: string[] = []): boolean => {
-    if (!Array.isArray(items)) {
-        throw new Error('Body is not an array');
-    }
+export const validateRemoveSimilarProductsBody = (item: ISimilarProductsRemovePayload): boolean => {
   
-    if (!items.length) {
+    if (!item?.similarProductIds?.length) {
         throw new Error('Similar products array is empty');
     }
+
+    if (!item?.productId) {
+        throw new Error('Product id is empty');
+    }
+
+    if (!Array.isArray(item.similarProductIds)) {
+        throw new Error('Body is not an array');
+    }
+
+    if (!isUUID(item?.productId)) {
+        throw new Error(`Value ${item.productId} is not UUID`);
+    }
+
   
-    items?.forEach((id: string, index) => {
+    item?.similarProductIds.forEach((id: string, index) => {
         if (!isUUID(id)) {
             throw new Error(`Value ${id} with index ${index} is not UUID`);
         }
