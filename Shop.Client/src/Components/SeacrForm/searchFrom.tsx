@@ -2,7 +2,7 @@ import styles from './searchForm.module.scss';
 import { searchFormFileds } from '../../data';
 import { useState, FormEvent } from 'react';
 import { useAppDispatch } from '../../redux/store';
-import { applyFilters } from '../../redux/slices/filtersSlice/filtersSlice';
+import { applyFilters, resetFilters } from '../../redux/slices/filtersSlice/filtersSlice';
 import Input from '../../Components/Common/Input/Input';
 import Button from '../../Components/Common/Button/button';
 
@@ -13,6 +13,11 @@ export default function SearchForm() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(applyFilters(formData));
+    };
+
+    const handleResetFilters = () => {
+        dispatch(resetFilters());
+        setFormData({ productName: '', priceFrom: null, priceTo: null });
     };
 
     const handleChange = (field: string, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,10 +35,14 @@ export default function SearchForm() {
                         key={index}
                         name={searchFormFiled.name}
                         type={searchFormFiled.type}
-                        onChange={(event) => handleChange(searchFormFiled.var, event)}/>
+                        onChange={(event) => handleChange(searchFormFiled.var, event)}
+                    />
                 )}
             </div>
-            <Button text={'Search products'} fontSize={'big'} color={'black'} type="submit"/>
+            <div className={styles.buttonPanel}>
+                <Button text={'Search products'} fontSize={'big'} color={'black'} type="submit"/>
+                <Button text={'Reset filters'} fontSize={'big'} color={'red'} type="reset" onClick={handleResetFilters}/>
+            </div>
         </form>
     );
 }

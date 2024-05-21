@@ -1,6 +1,6 @@
 import { IProduct } from '@Shared/types';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { applyFilters } from '../filtersSlice/filtersSlice';
+import { applyFilters, resetFilters } from '../filtersSlice/filtersSlice';
 import routes from '../../../routes';
 import filterProducts from '../../../utils/filterProducts';
 
@@ -61,6 +61,9 @@ const productsSlice = createSlice({
                 const filteredProducts = filterProducts(state.products, action.payload);
                 state.products = filteredProducts;
                 console.log('Отслеживаем: ', action.payload);
+            })
+            .addCase(resetFilters, (state) => {
+                state.products = state.initialProducts;
             });
     }
 });

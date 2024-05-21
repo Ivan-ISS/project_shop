@@ -3,18 +3,22 @@
 
 .footer {
     width: 100%;
-    border-top: 1px solid $base-black;
+    box-shadow: 0px -8px 5px -5px rgba($base-black, 0.4);
 
     .container {
         max-width: 1120px;
         min-width: 300px;
-        min-height: 100px;
+        min-height: 50px;
         margin: 0 auto;
         padding: 10px 75px;
         box-sizing: content-box;
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        .footerText {
+            font-weight: 700;
+        }
     }
 }
 
@@ -23,7 +27,7 @@
     .footer {
         
         .container {
-            min-height: 70px;
+            min-height: 30px;
             padding: 10px 15px;
         }
     }

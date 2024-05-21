@@ -23,15 +23,14 @@
     padding: 18px 5px;
 }
 
-.white {
-    background: $base-white;
-    border: solid 1px $base-black;
-    color: $base-black;
+.red {
+    background: $base-red;
+    color: $base-white;
 
     &:hover {
-        color: $base-white;
-        background: $base-black;
-        box-shadow: 1px 2px 5px rgba($base-black, 0.4);
+        color: $base-red;
+        background: $base-white;
+        box-shadow: 1px 2px 5px rgba($base-red, 0.4);
     }
 }
 
