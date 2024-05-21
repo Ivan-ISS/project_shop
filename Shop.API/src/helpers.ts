@@ -1,8 +1,9 @@
 import { Response } from 'express';
-import { IComment, IProduct, IImage } from "@Shared/types";
+import { IComment, IProduct, IImage, ProductsAddSimilar } from "@Shared/types";
 import { ICommentEntity, IImageEntity, CommentCreatePayload, IProductSearchFilter } from '../types';
 import { readFile, writeFile } from 'fs/promises';
 import { mapCommentEntity, mapImageEntity } from './services/mapping';
+import { isUUID } from 'validator';
 
 //=============================================================================
 //=====================ЗАГРУЗКА И СОХРАНЕНИЕ КОММЕНТАРИЕВ======================
@@ -169,6 +170,51 @@ export const getProductsFilterQuery = (filter: IProductSearchFilter): [string, s
 
     return [query, values];
 }
+
+//=============================================================================
+//=========ВАЛИДАЦИЯ ВХОДНЫХ ДАННЫХ ДЛЯ ПОХОЖИХ ТОВАРОВ ПРИ ДОБАВЛЕНИИ=========
+export const validateAddSimilarProductsBody = (items: ProductsAddSimilar = []): boolean => {
+
+    if (!Array.isArray(items)) {
+        throw new Error('Body is not an array');
+    }
+
+    if (!items.length) {
+        throw new Error('Similar products array is empty');
+    }
+
+    items?.forEach((connection: [string, string], index) => {   
+        if (!isUUID(connection[0])) {
+            throw new Error(`Value ${connection[0]} of the element with index ${index} is not UUID`);
+        }
+    
+        if (!isUUID(connection[1])) {
+            throw new Error(`Value ${connection[1]} of the element with index ${index} is not UUID`);
+        }
+    });
+
+    return true;
+}
+
+//=============================================================================
+//=========ВАЛИДАЦИЯ ВХОДНЫХ ДАННЫХ ДЛЯ ПОХОЖИХ ТОВАРОВ ПРИ УДАЛЕНИИ=========
+export const validateRemoveSimilarProductsBody = (items: string[] = []): boolean => {
+    if (!Array.isArray(items)) {
+        throw new Error('Body is not an array');
+    }
+  
+    if (!items.length) {
+        throw new Error('Similar products array is empty');
+    }
+  
+    items?.forEach((id: string, index) => {
+        if (!isUUID(id)) {
+            throw new Error(`Value ${id} with index ${index} is not UUID`);
+        }
+    });
+  
+    return true;
+  }
 
 //=============================================================================
 //====================ПРОВЕРКА СОВПАДЕНИЙ ЗНАЧЕНИЙ МАССИВОВ====================

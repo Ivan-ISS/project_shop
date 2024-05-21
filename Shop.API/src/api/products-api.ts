@@ -25,7 +25,9 @@ import {
     enhanceProductsComments,
     enhanceProductsImages,
     getProductsFilterQuery,
-    checkArraysForMatchingValues
+    checkArraysForMatchingValues,
+    validateAddSimilarProductsBody,
+    validateRemoveSimilarProductsBody
 } from '../helpers';
 import { v4 as uuidv4 } from 'uuid';
 import { OkPacket, RowDataPacket } from 'mysql2';
@@ -36,10 +38,10 @@ import {
     REPLACE_PRODUCT_THUMBNAIL,
     UPDATE_PRODUCT_FIELDS,
     INSERT_SIMILAR_PRODUCT_QUERY,
-    DELETE_SIMILAR_PRODUCTS_QUERY,
-    DELETE_ALL_SIMILAR_PRODUCTS_QUERY
+    DELETE_SIMILAR_PRODUCTS,
+    DELETE_SIMILAR_PRODUCTS_QUERY
 } from '../services/queries';
-import { IProduct, ProductCreatePayload, ProductAddSimilar } from '@Shared/types';
+import { IProduct, ProductCreatePayload, ProductsAddSimilar } from '@Shared/types';
 import { param, body, validationResult } from "express-validator";
 
 export const productsRouter = Router();
@@ -409,8 +411,8 @@ productsRouter.get('/similar-product/:id',
         }
 
         const [similarRows] = await connection.query<ISimilarProductEntity[]> (     // 1-й запрос на получение id похожих товаров
-            'SELECT * FROM similar WHERE product_id = ?',
-            [req.params.id]
+            'SELECT * FROM similar WHERE product_id = ? OR similar_product_id = ?',
+            [req.params.id, req.params.id]
         );
 
         if (!similarRows?.[0]) {
@@ -419,7 +421,9 @@ productsRouter.get('/similar-product/:id',
         }
 
         const similar = mapSimilarProductsEntity(similarRows);
-        const similarProductsIds = similar.map(item => item.similarProductId);
+        const similarProductsIds = similar.map(({ productId, similarProductId }) => {
+            return productId === req.params.id ? similarProductId : productId;
+        });
 
         const [similarProductRows] = await connection.query<IProductEntity[]> (     // 2-й запрос на получение похожих товаров по вышеполученным id
             'SELECT * FROM products WHERE product_id IN ?',
@@ -436,10 +440,9 @@ productsRouter.get('/similar-product/:id',
 
 productsRouter.post('/add-similar-products',
     [
-        body('*.productId').isUUID().withMessage('Product id is not UUID'),
-        body('*.similarProductId').isUUID().withMessage('Similar product id is not UUID')
+        body().custom(validateAddSimilarProductsBody),
     ],
-    async (req: Request<{}, {}, ProductAddSimilar[]>, res: Response) => {
+    async (req: Request<{}, {}, ProductsAddSimilar>, res: Response) => {
     try {
 
         const errors = validationResult(req);
@@ -451,20 +454,14 @@ productsRouter.post('/add-similar-products',
 
         const similarProducts = req.body;
 
-        if (!similarProducts?.length) {
-            res.status(400);
-            res.send('Similar products array is empty');
-            return;
-        }
-
         const [productRows] = await connection.query<IProductEntity[]> ('SELECT * FROM products');
         const [similarRows] = await connection.query<ISimilarProductEntity[]> ('SELECT * FROM similar');
 
         const products = mapProductsEntity(productRows);
         const similar = mapSimilarProductsEntity(similarRows);
 
-        const productIdsQuery = similarProducts.map(item => item.productId);
-        const similarProductIdsQuery = similarProducts.map(item => item.similarProductId);
+        const productIdsQuery = similarProducts.map(item => item[0]);
+        const similarProductIdsQuery = similarProducts.map(item => item[1]);
         const productIdsInDB = products.map(item => item.id);
 
         // console.log('Пары значений: ', similarProducts);
@@ -478,14 +475,14 @@ productsRouter.post('/add-similar-products',
 
         if (!checkProductIdInDB || !checkSimilarProductIdInDB) {                    // Проверка - все ли товары имеются в БД
             res.status(404);
-            res.send('Products with the provided ids were not found');
+            res.send('Not all ids are in the database');
             return;
         }
         
         const similarProductsUniq = similarProducts.filter(similarProduct =>        // Оставляем в массиве только те пары товаров, которых в БД еще нет
             !similar.some(similarRow =>                                             // В случае явного указания фигурных скобок необходимо писать и ключевое слово 'return'
-                similarProduct.productId === similarRow.productId &&
-                similarProduct.similarProductId === similarRow.similarProductId
+                similarProduct[0] === similarRow.productId &&
+                similarProduct[1] === similarRow.similarProductId
             )
         );
 
@@ -493,7 +490,7 @@ productsRouter.post('/add-similar-products',
             const semilarId = uuidv4();
             await connection.query<OkPacket> (
                 INSERT_SIMILAR_PRODUCT_QUERY,
-                [[[semilarId, similarProductsUniq[i].productId, similarProductsUniq[i].similarProductId]]]
+                [[[semilarId, similarProductsUniq[i][0], similarProductsUniq[i][1]]]]
             );
         }
 
@@ -505,11 +502,10 @@ productsRouter.post('/add-similar-products',
 });
 
 productsRouter.post('/remove-similar-products',
-    [
-        body('productId').isUUID().withMessage('Product id is not UUID'),
-        body('similarProductIds').isUUID().withMessage('Similar product id is not UUID'),
-    ],
-    async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {    // Для удаления выборочных связей товара
+    /* [
+        body().custom(validateRemoveSimilarProductsBody),
+    ], */
+    async (req: Request<{}, {}, ISimilarProductsRemovePayload>, res: Response) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -525,17 +521,13 @@ productsRouter.post('/remove-similar-products',
             [similarProductsToRemove.productId]
         );
 
-        if (!similarProductsToRemove?.similarProductIds?.length) {
-            res.status(400);
-            res.send('Similar products array is empty');
+        if (!productRows?.[0]) {
+            res.status(404);
+            res.send(`Product with id ${similarProductsToRemove} is not found`);
             return;
         }
 
-        if (!productRows?.[0]) {
-            res.status(404);
-            res.send(`Product with id ${similarProductsToRemove.productId} is not found`);
-            return;
-        }
+        console.log('К удалению ', similarProductsToRemove);
 
         const [info] = await connection.query<OkPacket> (
             DELETE_SIMILAR_PRODUCTS_QUERY,
@@ -555,17 +547,36 @@ productsRouter.post('/remove-similar-products',
     }
 });
 
-productsRouter.post('/remove-all-similar-products', async (req: Request<{}, {}, IAllSimilarProductsRemovePayload>, res: Response) => {    // Для удаления всех связей товара
-    try {
-        const similarProductsToRemove = req.body;
-
-        if (!similarProductsToRemove?.length) {
+productsRouter.post('/remove-similar',
+    [
+        body().custom(validateRemoveSimilarProductsBody),
+    ],
+    async (req: Request<{}, {}, IAllSimilarProductsRemovePayload>, res: Response) => {     // Этот метод реализован в соответствии с требованиями задания - но он не корректен
+    try {                                                                               // т.к. удаляет все связи выбранного товара с похожими товарами
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
             res.status(400);
-            res.send('Similar products array is empty');
+            res.json({ errors: errors.array() });
             return;
         }
 
-        const [info] = await connection.query<OkPacket>(DELETE_ALL_SIMILAR_PRODUCTS_QUERY, [[similarProductsToRemove]]);
+        const similarProductsToRemove = req.body;
+
+        const [productRows] = await connection.query<IProductEntity[]> (
+            'SELECT * FROM products WHERE product_id IN (?)',
+            [similarProductsToRemove]
+        );
+
+        if (!productRows?.[0]) {
+            res.status(404);
+            res.send(`Product with id ${similarProductsToRemove} is not found`);
+            return;
+        }
+
+        const [info] = await connection.query<OkPacket> (
+            DELETE_SIMILAR_PRODUCTS,
+            [similarProductsToRemove, similarProductsToRemove]
+        );
 
         if (info.affectedRows === 0) {
             res.status(404);

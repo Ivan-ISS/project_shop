@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IProduct, ProductCreatePayload, IProductFilterPayload, ProductAddSimilar } from '@Shared/types';
+import { IProduct, ProductCreatePayload, IProductFilterPayload, ProductsAddSimilar } from '@Shared/types';
 import { IProductEditData } from '../types';
 import { API_HOST } from './const';
 
@@ -37,13 +37,12 @@ function splitNewImages(data = ''): string[] {
     // return data.split(/\r\n|,/g).map(url => url.trim()).filter(url => url);
 }
 
-function compileSimilarProductsToAdd(productId: string, similarProducts: string | string[]): ProductAddSimilar[] {
+function compileSimilarProductsToAdd(productId: string, similarProducts: string | string[]): ProductsAddSimilar {
     if (typeof similarProducts === 'string') similarProducts = [similarProducts];
-    const data: ProductAddSimilar[] = similarProducts.map((similarProduct) => ({
-        ...data,
-        productId: productId,
-        similarProductId: similarProduct
-    }))
+    let data: ProductsAddSimilar = [];
+    similarProducts.forEach((similarProduct) => {
+        data.push([productId, similarProduct]);
+    })
     return data;
 }
 

@@ -19,7 +19,7 @@ export interface ISimilarProducts {
     similarProductId: string;
 }
 
-export type ProductAddSimilar = Omit<ISimilarProducts, 'id'>;
+export type ProductsAddSimilar = [string, string][];
 
 export interface IProduct {
     id: string;
