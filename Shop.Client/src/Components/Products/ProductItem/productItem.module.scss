@@ -7,24 +7,21 @@
     cursor: pointer;
 
     &:hover .productInfo .productTitle {
-        text-shadow: 
-                    0.2px 0.2px 1px rgba(0, 0, 0, 0.355),
-                    -0.2px -0.2px 1px rgba(0, 0, 0, 0.355),
-                    0.2px -0.2px 1px rgba(0, 0, 0, 0.355),
-                    -0.2px 0.2px 1px rgba(0, 0, 0, 0.355);
+        text-shadow: $text-shadow-hover;
     }
 
     &:hover .productImage {
-        box-shadow: 0 0 5px 3px rgb(0, 0, 0, 0.855);
+        box-shadow: $box-shadow-hover;
     }
 
     .productImage {
+        display: flex;
         border: 1px solid $base-black;
         box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.555);
         max-width: 100px;
         max-height: 100px;
         flex-shrink: 0;
-        transition: 0.3s ease;
+        transition: $transition-hover;
 
         img {
             width: 100%;
@@ -50,7 +47,7 @@
             overflow: hidden;
             max-height: 23px;
 
-            transition: 0.3s ease;
+            transition: $transition-hover;
         }
     
         .productLabel {
@@ -94,6 +91,7 @@
 
         .productInfo {
             max-width: 70px;
+            min-width: 70px;
             font-size: 10px;
             
             .productTitle {

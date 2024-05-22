@@ -2,11 +2,13 @@ import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { productsSlice } from './slices/productsSlice/productsSlice';
 import { filtersSlice } from './slices/filtersSlice/filtersSlice';
+import { similarProductsSlice } from './slices/similarProductsSlice/similarProductsSlice';
 
 const store = configureStore({
     reducer: {
         products: productsSlice.reducer,
         filters: filtersSlice.reducer,
+        similarProducts: similarProductsSlice.reducer, 
     }
 });
 

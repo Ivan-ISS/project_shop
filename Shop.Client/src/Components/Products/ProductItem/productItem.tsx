@@ -2,6 +2,7 @@ import styles from './productItem.module.scss';
 import { IProduct } from '@Shared/types';
 import { HTMLAttributes } from 'react';
 import { useNavigate } from 'react-router-dom';
+import formatToPrice from '../../../utils/formatToPrice';
 
 export interface ProductItemProps extends HTMLAttributes<HTMLDivElement>{
     product: IProduct;
@@ -25,7 +26,7 @@ export default function ProductItem({ product, ...props }: ProductItemProps) {
                 </div>
                 <div>
                     <span className={styles.productLabel}>Price: </span>
-                    {product.price}
+                    {formatToPrice(product.price)}
                 </div>
             </div>
         </div>

@@ -14,7 +14,7 @@ export const fetchProducts = createAsyncThunk<IProduct[], void, { rejectValue: F
         try {
             const response = await fetch(routes.url());
             const data = await response.json();
-            console.log('Response data: ', data);
+            console.log('Response data (products): ', data);
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue({ message: error } as FetchProductsError);
@@ -56,13 +56,13 @@ const productsSlice = createSlice({
                     state.error = action.payload.message;
                 }
             })
-            .addCase(applyFilters, (state, action) => {
+            .addCase(applyFilters, (state, action) => {     // слушатель фильтров
                 state.products = state.initialProducts;
                 const filteredProducts = filterProducts(state.products, action.payload);
                 state.products = filteredProducts;
                 console.log('Отслеживаем: ', action.payload);
             })
-            .addCase(resetFilters, (state) => {
+            .addCase(resetFilters, (state) => {             // слушатель сброса фильтров
                 state.products = state.initialProducts;
             });
     }
