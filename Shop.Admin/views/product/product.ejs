@@ -54,10 +54,18 @@
     <% if (otherItems.length) { %>
         <h2>Other products</h2>
         <div class="product-edit-other">
-            <% otherItems.forEach(function(otherItem) { %>
-                <%- include('product-other', { otherItem: otherItem }) %>
-            <% }); %>
+            <div>
+                <label for="other-products">Add to similar products</label>
+            </div>
+            <select class="product-select-other" name="productAddToSimilar" id="other-products" multiple>
+                <% otherItems.forEach(function(otherItem) { %>
+                    <option value="<%= otherItem.id %>">
+                        <%= otherItem.title %>
+                    </option>
+                <% }); %>
+            </select>
         </div>
+
     <% } %>
 
     <div class="product-edit-footer">

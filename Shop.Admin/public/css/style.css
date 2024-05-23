@@ -180,7 +180,7 @@ body {
     width: 30%;
 }
 
-.product-edit-other {
+/* .product-edit-other {
     padding: 10px 15px;
     border-bottom: 1px solid #00B1FFFF;
 }
@@ -197,6 +197,11 @@ body {
     column-gap: 10px;
     justify-content: space-between;
     width: 30%;
+} */
+
+.product-select-other {
+    width: 25%;
+    min-height: 150px;
 }
 
 /*Форма для создания товара ====================== */
