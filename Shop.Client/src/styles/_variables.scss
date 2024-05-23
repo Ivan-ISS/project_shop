@@ -1,3 +1,6 @@
+//shadows
+$box-shadow-container: 1px 2px 5px rgba($base-black, 0.4);
+$box-shadow-base: 0 0 5px 3px rgba(0, 0, 0, 0.555);
 $box-shadow-hover: 0 0 5px 3px rgb(0, 0, 0, 0.855);
 $text-shadow-hover: 
     0.2px 0.2px 1px rgba(0, 0, 0, 0.355),
@@ -6,13 +9,20 @@ $text-shadow-hover:
     -0.2px 0.2px 1px rgba(0, 0, 0, 0.355);
 $transition-hover: 0.3s ease;
 
-/* $font-size-navigation: 10px;
-$font-size-categories-books: 12px;
-$font-size-categories-books-hover: 12px;
+// font-size desktop
+$base-font-size-desc: 16px;
+$font-size-h1-desc: 44px;
+$font-size-h2-desc: 32px;
 
-$font-size-book-info: 10px;
-$font-size-book-title: 16px;
-$font-size-logIn-title: 16px;
-$font-size-book-price: 13px;
-$font-size-btn-big: 14px;
-$font-size-btn-small: 8px; */
+// font-size tablet and mobile
+$base-font-size-mobile: 14px;
+$font-size-h1-mobile: 32px;
+$font-size-h2-mobile: 28px;
+
+// font-size other
+$font-size-medium-desc: 20px;
+$font-size-medium-mobile: 16px;
+
+// font-weight
+$base-font-weight: 400;
+$base-font-weight-strong: 700;

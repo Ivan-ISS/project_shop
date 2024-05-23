@@ -6,7 +6,7 @@
     padding: 30px;
     background: $base-gray;
     border-radius: 15px;
-    box-shadow: 1px 2px 5px rgba($base-black, 0.4);
+    box-shadow: $box-shadow-container;
 
     display: flex;
     gap: 35px;
@@ -25,12 +25,12 @@
             max-width: 250px;
             max-height: 250px;
             border: 1px solid $base-black;
-            box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.555);
+            box-shadow: $box-shadow-base;
 
             img {
                 width: 100%;
                 height: 100%;
-                background: #464646;
+                background: $background-placeholder-img;
                 object-fit: cover;
             }
         }
@@ -58,46 +58,46 @@
         display: flex;
         flex-direction: column;
         row-gap: 15px;
-        font-size: 22px;
+        font-size: $font-size-medium-desc;
         width: 100%;
     
         .productLabel {
-            font-weight: 600;
+            font-weight: $base-font-weight-strong;
         }
 
         .productPrice {
-            font-weight: 600;
+            font-weight: $base-font-weight-strong;
         }
 
         .similarProducts {
+            border-top: 1px solid $base-black;
             display: flex;
             flex-direction: column;
             row-gap: 20px;
             padding: 15px;
-            background: $base-white;
-            box-shadow: 1px 2px 5px rgba($base-black, 0.4);
-            border-radius: 15px;
+            /* background: $base-white;
+            box-shadow: $box-shadow-container;
+            border-radius: 15px; */
 
             .similarTitle {
-                font-size: 22px;
-                font-weight: 700;
+                font-weight: $base-font-weight-strong;
             }
 
             .similarProductsList {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-                font-size: 16px;
+                font-size: $base-font-size-desc;
                 gap: 15px;
 
                 .similarProductsInfo {
                     padding: 3px;
-                    background: $base-gray;
+                    background: $base-white;
                     border-radius: 5px;
-                    box-shadow: 1px 2px 5px rgba($base-black, 0.4);
+                    box-shadow: $box-shadow-container;
                     cursor: pointer;
 
                     .similarProductTitle {
-                        font-weight: 700;
+                        font-weight: $base-font-weight-strong;
                         transition: $transition-hover;
                         
                         display: -webkit-box;
@@ -124,12 +124,24 @@
 
     .productCard {
         flex-direction: column;
+        align-items: center;
 
         .blockImages {
 
             .productThumbnail {
                 min-width: 200px;
                 min-height: 200px;
+            }
+        }
+
+        .productInfo {
+            font-size: $font-size-medium-mobile;
+
+            .similarProducts {
+
+                .similarProductsList {
+                    font-size: $base-font-size-mobile;
+                }
             }
         }
     }

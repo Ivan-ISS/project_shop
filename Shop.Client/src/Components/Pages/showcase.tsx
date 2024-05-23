@@ -10,8 +10,7 @@ export default function Showcase() {
     return (
         <div className={styles.showcase}>
             <h1 className={styles.title}>
-                Список товаров
-                <span className={styles.textDecor}>{` (${products.length}) `}</span>
+                {`List of products (${products.length})`}
             </h1>
             <SearchForm/>
             <ProductsList products={products}/>

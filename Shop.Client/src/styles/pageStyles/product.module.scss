@@ -4,8 +4,18 @@
 .product {
 
     .productTitle {
-        font-size: 44px;
-        font-weight: 700;
+        font-size: $font-size-h1-desc;
+        font-weight: $base-font-weight-strong;
         margin-bottom: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .product {
+
+        .productTitle {
+            font-size: $font-size-h1-mobile;
+        }
     }
 }

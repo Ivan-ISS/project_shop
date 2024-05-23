@@ -8,8 +8,8 @@
     margin-bottom: 50px;
 
     .commentFormTitle {
-        font-size: 32px;
-        font-weight: 700;
+        font-size: $font-size-h2-desc;
+        font-weight: $base-font-weight-strong;
     }
 
     .formFields {
@@ -19,6 +19,17 @@
 
     .errorPanel {
         color: $base-red;
-        font-weight: 700;
+        font-weight: $base-font-weight-strong;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .commentFrom {
+        font-size: $font-size-h1-mobile;
+
+        .commentFormTitle {
+            font-size: $font-size-h2-mobile;
+        }
     }
 }

@@ -2,8 +2,8 @@
 @import "/src/styles/_variables";
 
 .title {
-    font-size: 44px;
-    font-weight: 700;
+    font-size: $font-size-h1-desc;
+    font-weight: $base-font-weight-strong;
     margin-bottom: 50px;
 }
 
@@ -21,13 +21,13 @@
 
 .textDecor {
     font-size: 18px;
-    font-weight: 700;
+    font-weight: $base-font-weight-strong;
 }
 
 @media (max-width: 768px) {
 
     .title {
-        font-size: 32px;
+        font-size: $font-size-h1-mobile;
     }
     
 }

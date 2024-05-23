@@ -17,7 +17,7 @@
     .productImage {
         display: flex;
         border: 1px solid $base-black;
-        box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.555);
+        box-shadow: $box-shadow-base;
         max-width: 100px;
         max-height: 100px;
         flex-shrink: 0;
@@ -26,7 +26,7 @@
         img {
             width: 100%;
             height: 100%;
-            background: #464646;
+            background: $background-placeholder-img;
             object-fit: cover;
         }
     }
@@ -37,9 +37,9 @@
         .productTitle {
             display: block;
             color: inherit;
-            font-size: 20px;
+            font-size: $font-size-medium-desc;
             margin-bottom: 10px;
-            font-weight: 600;
+            font-weight: $base-font-weight-strong;
 
             display: -webkit-box;
             -webkit-line-clamp: 1;
@@ -51,7 +51,7 @@
         }
     
         .productLabel {
-            font-weight: 600;
+            font-weight: $base-font-weight-strong;
         }
     }
 }
@@ -68,11 +68,11 @@
         }
 
         .productInfo {
-            font-size: 14px;
+            font-size: $base-font-size-mobile;
             max-width: 100px;
             
             .productTitle {
-                font-size: 16px;
+                font-size: $font-size-medium-mobile;
             }
         }
     }

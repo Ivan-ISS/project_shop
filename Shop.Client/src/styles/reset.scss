@@ -41,6 +41,7 @@ body {
     height: 100%;
     font-family: "Roboto", "helvetica", "arial", "verdana", "sans-serif";
     color: $base-black;
+    font-size: $base-font-size-desc;
     font-weight: 400;
     line-height: normal;
     background: $base-white;
@@ -50,4 +51,12 @@ body {
     height: 100%;
     overflow: hidden;
     overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+
+    body {
+        font-size: $base-font-size-mobile;
+    }
+    
 }
