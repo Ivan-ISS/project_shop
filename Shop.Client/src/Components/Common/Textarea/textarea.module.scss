@@ -5,15 +5,17 @@
     font-weight: 700;
     font-size: 12px;
     align-self: center;
+    width: 100%;
 
-    .input {
+    .textarea {
         margin: 10px 0 10px 0;
         padding: 10px;
         outline: none;
-        max-width: 176px;
-        min-height: 35px;
+        width: 100%;
+        min-height: 38px;
         border: 1px solid rgba($base-black, 0.55);
         border-radius: 7.5px;
+        resize: none;
         transition: 0.3s ease;
 
         &::placeholder {
@@ -26,20 +28,9 @@
         }
     }
 
-    input:valid {
+    .textarea:valid {
         box-shadow: 0 0 0 2px $valid-blue;
         border: 1px solid rgba($base-black, 0.255);
         background: rgba($valid-blue, 0.155);
-    }
-}
-
-@media (max-width: 767px) {
-
-    .field {
-
-        .input {
-            margin: 5px 0 8px 0;
-            max-width: 140px;
-        }
     }
 }

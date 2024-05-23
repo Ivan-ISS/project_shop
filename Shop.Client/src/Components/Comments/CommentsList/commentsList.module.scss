@@ -1,0 +1,19 @@
+@import "/src/styles/_colors";
+@import "/src/styles/_variables";
+
+.comments {
+
+    .commentsTitle {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .commentsList {
+
+        .comment {
+            padding: 15px 15px 5px;
+            border-bottom: 1px solid $base-black;
+        }
+    }
+}

@@ -1,0 +1,19 @@
+@import "/src/styles/_colors";
+@import "/src/styles/_variables";
+
+.commentFrom {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    margin-bottom: 50px;
+
+    .commentFormTitle {
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .formFields {
+        display: flex;
+        column-gap: 25px;
+    }
+}

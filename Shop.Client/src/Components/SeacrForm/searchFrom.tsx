@@ -1,5 +1,5 @@
 import styles from './searchForm.module.scss';
-import { searchFormFileds } from '../../data';
+import { searchFormFields } from '../../data';
 import { useState, FormEvent } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { applyFilters, resetFilters } from '../../redux/slices/filtersSlice/filtersSlice';
@@ -30,12 +30,12 @@ export default function SearchForm() {
     return (
         <form className={styles.searchFrom} onSubmit={handleSubmit}>
             <div className={styles.productsSearch}>
-                {searchFormFileds.map((searchFormFiled, index) => 
+                {searchFormFields.map((searchFormField, index) => 
                     <Input
                         key={index}
-                        name={searchFormFiled.name}
-                        type={searchFormFiled.type}
-                        onChange={(event) => handleChange(searchFormFiled.var, event)}
+                        name={searchFormField.name}
+                        type={searchFormField.type}
+                        onChange={(event) => handleChange(searchFormField.var, event)}
                     />
                 )}
             </div>

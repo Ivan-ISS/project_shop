@@ -10,6 +10,7 @@
 
     display: flex;
     gap: 35px;
+    margin-bottom: 50px;
 
     .blockImages {
         display: flex;
@@ -84,7 +85,7 @@
 
             .similarProductsList {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
                 font-size: 16px;
                 gap: 15px;
 

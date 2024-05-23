@@ -6,6 +6,8 @@ import { fetchSimilarProducts } from '../../redux/slices/similarProductsSlice/si
 import { selectProducts } from '../../redux/slices/productsSlice/productsSelectors';
 import { selectSimilarProducts } from '../../redux/slices/similarProductsSlice/similarProductsSelectors';
 import ProductCard from '../Products/ProductCard/productCard';
+import CommentForm from '../CommentForm/commentForm';
+import CommentsList from '../Comments/CommentsList/commentsList';
 
 export default function Product() {
     const { id } = useParams();
@@ -30,6 +32,8 @@ export default function Product() {
         <div className={styles.product}>
             <h1 className={styles.productTitle}>{product.title}</h1>
             <ProductCard product={product} similarProducts={similarProducts}/>
+            <CommentForm/>
+            <CommentsList comments={product.comments}/>
         </div>
     );
 }
