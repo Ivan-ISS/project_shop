@@ -52,18 +52,23 @@ export const UPDATE_PRODUCT_FIELDS = `
 //====================== ИТОГОВОЕ ПРАКТИЧЕСКОЕ ЗАДАНИЕ ======================
 
 export const INSERT_SIMILAR_PRODUCT_QUERY = `
-    INSERT INTO similar
-    (similar_id, product_id, similar_product_id)
+    INSERT INTO similar_products
+    (id, first_product, second_product)
     VALUES ?
 `;
 
 export const DELETE_SIMILAR_PRODUCTS = `
-    DELETE FROM similar 
-    WHERE product_id IN (?)
-    OR similar_product_id IN (?)
+    DELETE FROM similar_products 
+    WHERE first_product IN (?)
+    OR second_product IN (?)
 `;
 
 export const DELETE_SIMILAR_PRODUCTS_QUERY = `
-    DELETE FROM similar 
-    WHERE product_id = ? AND similar_product_id IN (?)
+    DELETE FROM similar_products 
+    WHERE (first_product = ? AND second_product IN (?))
+`;
+
+export const DELETE_SIMILAR_PRODUCTS_QUERY_REVERSE = `
+    DELETE FROM similar_products 
+    WHERE (second_product = ? AND first_product IN (?))
 `;

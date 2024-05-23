@@ -39,7 +39,8 @@ import {
     UPDATE_PRODUCT_FIELDS,
     INSERT_SIMILAR_PRODUCT_QUERY,
     DELETE_SIMILAR_PRODUCTS,
-    DELETE_SIMILAR_PRODUCTS_QUERY
+    DELETE_SIMILAR_PRODUCTS_QUERY,
+    DELETE_SIMILAR_PRODUCTS_QUERY_REVERSE
 } from '../services/queries';
 import { IProduct, ProductCreatePayload, ProductsAddSimilar } from '@Shared/types';
 import { param, body, validationResult } from "express-validator";
@@ -368,8 +369,8 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
         );                                                  //
 
         await connection.query<OkPacket> (
-            'DELETE FROM similar WHERE product_id = ?',
-            [req.params.id]
+            'DELETE FROM similar_products WHERE first_product = ? OR second_product = ?',
+            [req.params.id, req.params.id]
         );
 
         await connection.query<OkPacket> (
@@ -411,7 +412,7 @@ productsRouter.get('/similar-product/:id',
         }
 
         const [similarRows] = await connection.query<ISimilarProductEntity[]> (     // 1-й запрос на получение id похожих товаров
-            'SELECT * FROM similar WHERE product_id = ? OR similar_product_id = ?',
+            'SELECT * FROM similar_products WHERE first_product = ? OR second_product = ?',
             [req.params.id, req.params.id]
         );
 
@@ -455,7 +456,7 @@ productsRouter.post('/add-similar-products',
         const similarProducts = req.body;
 
         const [productRows] = await connection.query<IProductEntity[]> ('SELECT * FROM products');
-        const [similarRows] = await connection.query<ISimilarProductEntity[]> ('SELECT * FROM similar');
+        const [similarRows] = await connection.query<ISimilarProductEntity[]> ('SELECT * FROM similar_products');
 
         const products = mapProductsEntity(productRows);
         const similar = mapSimilarProductsEntity(similarRows);
@@ -527,12 +528,17 @@ productsRouter.post('/remove-similar-products',
             return;
         }
 
-        const [info] = await connection.query<OkPacket> (
+        const [infoOne] = await connection.query<OkPacket> (
             DELETE_SIMILAR_PRODUCTS_QUERY,
             [similarProductsToRemove.productId, similarProductsToRemove.similarProductIds]
         );
 
-        if (info.affectedRows === 0) {
+        const [infoTwo] = await connection.query<OkPacket> (
+            DELETE_SIMILAR_PRODUCTS_QUERY_REVERSE,
+            [similarProductsToRemove.productId, similarProductsToRemove.similarProductIds]
+        );
+
+        if (infoOne.affectedRows === 0 && infoTwo.affectedRows === 0) {
             res.status(404);
             res.send('No one similar product has been removed');
             return;

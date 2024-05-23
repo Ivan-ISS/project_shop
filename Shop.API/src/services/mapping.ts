@@ -35,11 +35,11 @@ export const mapProductsEntity = (data: IProductEntity[]): IProduct[] => {  // Ð
     }));
 }
 
-export const mapSimilarProductEntity = ({ similar_id, product_id, similar_product_id, ...rest }: ISimilarProductEntity): ISimilarProducts => {
+export const mapSimilarProductEntity = ({ id, first_product, second_product, ...rest }: ISimilarProductEntity): ISimilarProducts => {
     return {
-        id: similar_id,
-        productId: product_id,
-        similarProductId: similar_product_id,
+        id: id,
+        productId: first_product,
+        similarProductId: second_product,
         ...rest
     };
 }
