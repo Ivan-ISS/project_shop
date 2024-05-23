@@ -5,6 +5,6 @@ export const searchFormFields = [
 ];
 
 export const commentFormFields = [
-    { name: 'Title', type: 'text', varName: 'title' },
+    { name: 'Name', type: 'text', varName: 'name' },
     { name: 'Email', type: 'email', varName: 'email' },
 ];

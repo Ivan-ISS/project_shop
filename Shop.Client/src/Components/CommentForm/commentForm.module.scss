@@ -16,4 +16,9 @@
         display: flex;
         column-gap: 25px;
     }
+
+    .errorPanel {
+        color: $base-red;
+        font-weight: 700;
+    }
 }

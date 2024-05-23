@@ -32,7 +32,7 @@ export default function Product() {
         <div className={styles.product}>
             <h1 className={styles.productTitle}>{product.title}</h1>
             <ProductCard product={product} similarProducts={similarProducts}/>
-            <CommentForm/>
+            <CommentForm productId={product.id}/>
             <CommentsList comments={product.comments}/>
         </div>
     );

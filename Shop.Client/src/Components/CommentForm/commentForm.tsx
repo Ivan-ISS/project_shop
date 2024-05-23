@@ -1,22 +1,28 @@
 import styles from './commentForm.module.scss';
 import { commentFormFields } from '../../data';
 import { useState, FormEvent } from 'react';
-//import { useAppDispatch } from '../../redux/store';
-//import { applyFilters } from '../../redux/slices/filtersSlice/filtersSlice';
+import { useAppSelector, useAppDispatch } from '../../redux/store';
+import { selectCommentError } from '../../redux/slices/commentSlice/commentSelector';
+import { fetchCommentSend } from '../../redux/slices/commentSlice/commentSlice';
+import { fetchProducts } from '../../redux/slices/productsSlice/productsSlice';
 import Input from '../Common/Input/Input';
 import Textarea from '../Common/Textarea/textarea';
 import Button from '../Common/Button/button';
 
-export default function SearchForm() {
-    const [ valueInput, setValueInput ] = useState({ title: '', email: '', body: '' });
-    const [ formData, setFormData ] = useState({ title: '', email: '', body: '' });
-    //const dispatch = useAppDispatch();
+export interface CommentForm {
+    productId: string;
+}
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+export default function CommentForm({ productId }: CommentForm) {
+    const [ formData, setFormData ] = useState({ productId: productId, name: '', email: '', body: '' });
+    const commentError = useAppSelector(selectCommentError);
+    const dispatch = useAppDispatch();
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(formData);
-        //dispatch(applyFilters(formData));
-        setValueInput({ title: '', email: '', body: '' });
+        await dispatch(fetchCommentSend({ ...formData }));  // дожидаемся окончания записи комментария в БД, чтобы при новом рендере комментарий был уже на клиенте
+        setFormData({ productId: productId, name: '', email: '', body: '' });
+        await dispatch(fetchProducts());
     };
 
     const handleChange = (field: string, event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -24,7 +30,6 @@ export default function SearchForm() {
             ...prevData,
             [field]: event.target.value
         }));
-        setValueInput(formData);
     };
 
     return (
@@ -38,7 +43,7 @@ export default function SearchForm() {
                         key={index}
                         name={commentFormField.name}
                         type={commentFormField.type}
-                        value={valueInput[commentFormField.varName as keyof typeof valueInput]}
+                        value={formData[commentFormField.varName as keyof typeof formData]}
                         onChange={(event) => handleChange(commentFormField.varName, event)}
                         required
                     />
@@ -46,10 +51,11 @@ export default function SearchForm() {
             </div>
             <Textarea
                 name={'Comment'}
-                value={valueInput.body}
+                value={formData.body}
                 onChange={(event) => handleChange('body', event)}
                 required
             />
+            { commentError ? <div className={styles.errorPanel} >{commentError}</div> : null }
             <div className={styles.buttonPanel}>
                 <Button text={'Send'} fontSize={'big'} color={'black'} type="submit"/>
             </div>

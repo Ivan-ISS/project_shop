@@ -1,4 +1,5 @@
 const url = 'http://localhost:8000/api/products';
+const urlComment = 'http://localhost:8000/api/comments';
 
 interface IRoutes {
     home: () => string;
@@ -6,6 +7,7 @@ interface IRoutes {
     product: () => string;
     notFound: () => string;
     url: () => string;
+    urlComment: () => string;
 }
 
 const routes: IRoutes = {
@@ -14,6 +16,7 @@ const routes: IRoutes = {
     product: () => '/:id',
     notFound: () => '/*',
     url: () => url,
+    urlComment: () => urlComment,
 };
 
 export default routes;

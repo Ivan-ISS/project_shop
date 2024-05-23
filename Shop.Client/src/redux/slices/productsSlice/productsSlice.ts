@@ -25,7 +25,7 @@ export const fetchProducts = createAsyncThunk<IProduct[], void, { rejectValue: F
 export interface IState {
     initialProducts: IProduct[];
     products: IProduct[];
-    status: 'not started' | 'in progress' | 'successfully' | 'download faild';
+    status: 'not started' | 'in progress' | 'successfully' | 'download failed';
     error: string;
 }
 
@@ -51,7 +51,7 @@ const productsSlice = createSlice({
                 state.products = action.payload;
             })
             .addCase(fetchProducts.rejected, (state, action: PayloadAction<FetchProductsError | undefined>) => {
-                state.status = 'download faild';
+                state.status = 'download failed';
                 if (action.payload) {
                     state.error = action.payload.message;
                 }
@@ -60,7 +60,7 @@ const productsSlice = createSlice({
                 state.products = state.initialProducts;
                 const filteredProducts = filterProducts(state.products, action.payload);
                 state.products = filteredProducts;
-                console.log('Отслеживаем: ', action.payload);
+                console.log('Listening: ', action.payload);
             })
             .addCase(resetFilters, (state) => {             // слушатель сброса фильтров
                 state.products = state.initialProducts;

@@ -22,7 +22,7 @@ export const fetchSimilarProducts = createAsyncThunk<IProduct[], string, { rejec
 
 export interface IState {
     similarProducts: IProduct[];
-    status: 'not started' | 'in progress' | 'successfully' | 'download faild';
+    status: 'not started' | 'in progress' | 'successfully' | 'download failed';
     error: string;
 }
 
@@ -46,7 +46,7 @@ const similarProductsSlice = createSlice({
                 state.similarProducts = action.payload;
             })
             .addCase(fetchSimilarProducts.rejected, (state, action: PayloadAction<fetchProductsError | undefined>) => {
-                state.status = 'download faild';
+                state.status = 'download failed';
                 if (action.payload) {
                     state.error = action.payload.message;
                 }
