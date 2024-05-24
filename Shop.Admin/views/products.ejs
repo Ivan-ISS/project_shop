@@ -2,53 +2,57 @@
 
 <form action="search" method="GET" class="products-search-form">
     <div class="products-search">
-        <div>
-            <label for="filter-input">Title:</label>
-            <input id="filter-input" type="text" name="title" value="<%= queryParams?.title || "" %>" />
+        <div class="field">
+            <label for="filter-input" class="label">Title:</label>
+            <input id="filter-input" class="input" type="text" name="title" value="<%= queryParams?.title || "" %>" />
         </div>
 
-        <div>
-            <label for="filter-description">Description:</label>
-            <input id="filter-description" type="text" name="description"
+        <div class="field">
+            <label for="filter-description" class="label">Description:</label>
+            <input id="filter-description" class="input" type="text" name="description"
                 value="<%= queryParams?.description || "" %>" />
         </div>
 
-        <div>
-            <label for="filter-price-from">Price from:</label>
-            <input id="filter-price-from" type="text" name="priceFrom" value="<%= queryParams?.priceFrom || "" %>" />
+        <div class="field">
+            <label for="filter-price-from" class="label">Price from:</label>
+            <input id="filter-price-from" class="input" type="text" name="priceFrom" value="<%= queryParams?.priceFrom || "" %>" />
         </div>
 
-        <div>
-            <label for="filter-price-to">Price to:</label>
-            <input id="filter-price-to" type="text" name="priceTo" value="<%= queryParams?.priceTo || "" %>" />
+        <div class="field">
+            <label for="filter-price-to" class="label">Price to:</label>
+            <input id="filter-price-to" class="input" type="text" name="priceTo" value="<%= queryParams?.priceTo || "" %>" />
         </div>
     </div>
 
-    <button type="submit">Search</button>
-    <a href="<%= `/${process.env.ADMIN_PATH}` %>">Reset filter</a>
+    <div class="button-panel">
+        <button type="submit" class="button button-black">Search</button>
+        <a href="<%= `/${process.env.ADMIN_PATH}` %>" class="button button-red">Reset filter</a>
+    </div>
 </form>
 
 <div class="products-list">
     <% items.forEach(function(product) { %>
-        <div class="product-item">
-            <div class="image">
-                <a href="<%= `${product.id}` %>">
-                    <img src="<%= product.thumbnail?.url || "img/product-placeholder.png" %>" alt="<%= product.title %>">
-                </a>
-            </div>
-            <div class="info">
-                <a class="title" href="<%= `${product.id}` %>">
-                    <%= product.title %>
-                </a>
-                <div>
-                    <span class="label">Images:</span>
-                    <%= product.images?.length || 0 %>
+        <a href="<%= `${product.id}` %>">
+            <div class="product-item">
+                <div class="image">
+                    <!-- <a href="<%= `${product.id}` %>"> -->
+                        <img src="<%= product.thumbnail?.url || "img/product-placeholder.png" %>" alt="<%= product.title %>">
+                    <!-- </a> -->
                 </div>
-                <div>
-                    <span class="label">Price:</span>
-                    <%= product.price %>
+                <div class="info">
+                    <div class="title">
+                        <%= product.title %>
+                    </div>
+                    <div>
+                        <span class="label">Images:</span>
+                        <%= product.images?.length || 0 %>
+                    </div>
+                    <div>
+                        <span class="label">Price:</span>
+                        <%= product.price %>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
     <% }); %>
 </div>

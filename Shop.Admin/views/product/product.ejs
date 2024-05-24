@@ -4,23 +4,23 @@
 <form action="<%= `save/${item.id}` %>" method="post" class="product-edit-form">
     <div class="product-edit-fields">
         <div class="field">
-            <label for="item-title">Title:</label>
-            <input id="item-title" type="text" name="title" value="<%= item.title %>" />
+            <label for="item-title" class="label">Title:</label>
+            <input id="item-title" class="input" type="text" name="title" value="<%= item.title %>" />
         </div>
 
         <div class="field">
-            <label for="item-description">Description:</label>
-            <textarea id="item-description" rows="3" name="description"><%= item.description %></textarea>
+            <label for="item-description" class="label">Description:</label>
+            <textarea id="item-description" class="textarea" rows="3" name="description"><%= item.description %></textarea>
         </div>
 
         <div class="field">
-            <label for="item-price">Price:</label>
-            <input id="item-price" type="text" name="price" value="<%= item.price %>" />
+            <label for="item-price" class="label">Price:</label>
+            <input id="item-price" class="input" type="text" name="price" value="<%= item.price %>" />
         </div>
 
         <div class="field">
-            <label for="item-new-images">New images URLs (use line break or a comma):</label>
-            <textarea id="item-new-images" rows="3" name="newImages"></textarea>
+            <label for="item-new-images" class="label">New images URLs (use line break or a comma):</label>
+            <textarea id="item-new-images" class="textarea" rows="3" name="newImages"></textarea>
         </div>
     </div>
 
@@ -69,7 +69,7 @@
     <% } %>
 
     <div class="product-edit-footer">
-        <button type="submit">Save changes</button>
-        <a href="<%= `remove-product/${item.id}` %>">Delete product</a>
+        <button type="submit" class="button button-black">Save changes</button>
+        <a href="<%= `remove-product/${item.id}` %>" class="button button-red">Delete product</a>
     </div>
 </form>
