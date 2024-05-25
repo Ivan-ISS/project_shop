@@ -1,6 +1,11 @@
 @import "/src/styles/_colors";
 @import "/src/styles/_variables";
 
+.loaderPanel {
+    height: 100%;
+    margin-top: 25%;
+}
+
 .title {
     font-size: $font-size-h1-desc;
     font-weight: $base-font-weight-strong;

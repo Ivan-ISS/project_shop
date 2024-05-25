@@ -12,9 +12,17 @@ export const fetchProducts = createAsyncThunk<IProduct[], void, { rejectValue: F
     'products/fetch',
     async (_, thunkAPI) => {
         try {
-            const response = await fetch(routes.url());
+            const response = await fetch(routes.urlProducts());
+
+            if (!response.ok) {     // Если приходит ответ с ошибкой его не надо парсить через response.json();
+                const error = await response.text();
+                console.log('e ', error);
+                return thunkAPI.rejectWithValue({message: error} as FetchProductsError);
+            }
+            
             const data = await response.json();
             console.log('Response data (products): ', data);
+
             return data;
         } catch (error) {
             return thunkAPI.rejectWithValue({ message: error } as FetchProductsError);

@@ -10,7 +10,7 @@ export const fetchSimilarProducts = createAsyncThunk<IProduct[], string, { rejec
     'similarProducts/fetch',
     async (id, thunkAPI) => {
         try {
-            const response = await fetch(`${routes.url()}/similar-product/${id}`);
+            const response = await fetch(`${routes.urlProducts()}/similar-product/${id}`);
             const data = await response.json();
             console.log('Response data (similar products): ', data);
             return data;

@@ -3,17 +3,20 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../redux/store';
 import { fetchSimilarProducts } from '../../redux/slices/similarProductsSlice/similarProductsSlice';
-import { selectProducts } from '../../redux/slices/productsSlice/productsSelectors';
-import { selectSimilarProducts } from '../../redux/slices/similarProductsSlice/similarProductsSelectors';
+import { selectProducts, selectProductsStatus } from '../../redux/slices/productsSlice/productsSelectors';
+import { selectSimilarProducts, selectSimilarProductsStatus } from '../../redux/slices/similarProductsSlice/similarProductsSelectors';
 import ProductCard from '../Products/ProductCard/productCard';
 import CommentForm from '../CommentForm/commentForm';
 import CommentsList from '../Comments/CommentsList/commentsList';
+import Loader from '../Common/Loader/loader';
 
 export default function Product() {
     const { id } = useParams();
     const dispatch = useAppDispatch();
     const products = useAppSelector(selectProducts);
+    const productsStatus = useAppSelector(selectProductsStatus);
     const similarProducts = useAppSelector(selectSimilarProducts);
+    const similarProductsStatus = useAppSelector(selectSimilarProductsStatus);
     const product = products.find(product => product.id === id);
 
     useEffect(() => {
@@ -21,6 +24,12 @@ export default function Product() {
             dispatch(fetchSimilarProducts(id));
         }
     }, [dispatch, id]);
+
+    if (productsStatus === 'in progress' || similarProductsStatus === 'in progress') {
+        return (
+            <div className={styles.loaderPanel}><Loader/></div>
+        );
+    }
 
     if (!product) {
         return (

@@ -16,7 +16,7 @@
         border: 1px solid rgba($base-black, 0.55);
         border-radius: 7.5px;
         resize: none;
-        transition: 0.3s ease;
+        transition: $transition-hover;
 
         &::placeholder {
             opacity: 0.7;

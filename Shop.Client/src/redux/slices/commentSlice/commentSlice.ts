@@ -16,7 +16,7 @@ export const fetchCommentSend = createAsyncThunk<void, fetchCommentSendArgs, {re
     'commentSend/fetch',
     async (formData, thunkAPI) => {
         try {
-            const response =await fetch(routes.urlComment(), {
+            const response = await fetch(routes.urlComment(), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

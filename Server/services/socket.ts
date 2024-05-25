@@ -17,8 +17,8 @@ export function initSocketServer(applicationServer: Express): Server {
         log('A client is connected');
     });
 
-    httpServer.listen(8001, () => {
-        log('server is running on port 8001');
+    httpServer.listen(3001, () => {
+        log('server is running on port 3001');
     });
 
     return io;

@@ -1,6 +1,11 @@
 @import "/src/styles/_colors";
 @import "/src/styles/_variables";
 
+.loaderPanel {
+    height: 100%;
+    margin-top: 25%;
+}
+
 .product {
 
     .productTitle {

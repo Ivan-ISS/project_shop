@@ -57,6 +57,7 @@ productsRouter.get('/', async (req: Request, res: Response) => {
         const withComments = enhanceProductsComments(products, commentRows);
         const withImages = enhanceProductsImages(withComments, imageRows);
     
+        //setTimeout(() => {res.send(withImages);}, 2000)
         res.send(withImages);
     } catch (e) {
         throwServerError(res, e);
