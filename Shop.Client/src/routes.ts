@@ -1,6 +1,7 @@
-export const API_HOST = 'http://localhost:3000/api/';
-
-/* const API_HOST = `http://${process.env.LOCAL_HOST}:${process.env.LOCAL_PORT}/${process.env.API_PATH}`; */
+// const API_HOST = `http://${process.env.LOCAL_HOST}:${process.env.LOCAL_PORT}/${process.env.API_PATH}`;
+//export const LOCAL_HOST_PORT = 'http://localhost:3000';
+export const LOCAL_HOST_PORT = '';
+export const API_HOST = `${LOCAL_HOST_PORT}/api`;
 
 interface IRoutes {
     home: () => string;

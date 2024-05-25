@@ -5,7 +5,7 @@ import { useAppSelector } from '../../redux/store';
 import { selectProducts, selectProductsStatus } from '../../redux/slices/productsSlice/productsSelectors';
 import Button from '../Common/Button/button';
 import Loader from '../Common/Loader/loader';
-import routes from '../../routes';
+import routes, { LOCAL_HOST_PORT } from '../../routes';
 import formatToPrice from '../../utils/formatToPrice';
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
 
     const handleClickToAdminSystem = () => {
         //navigate('admin/auth/login');
-        window.open('http://localhost:3000/admin/auth/login', '_blank');
+        window.open(`${LOCAL_HOST_PORT}/admin`, '_blank');
     };
 
     if (productsStatus === 'in progress') {
