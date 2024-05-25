@@ -30,7 +30,7 @@ function initRouter() {
 
     const ShopClient = path.join(__dirname, './Shop.Client/dist', 'index.html');    // путь до React приложения
     server.use(express.static(path.join(__dirname, './Shop.Client/dist')));         // для предоставления доступа к папке dist React приложения (статические файлы)
-    server.get('/', (_, res) => {
+    server.get('/*', (_, res) => {
         res.sendFile(ShopClient);                                                   // раньше была заглушка - res.send('React App');
     })
 }
