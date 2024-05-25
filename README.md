@@ -1,16 +1,18 @@
 # project_shop / Shop Project
 
+:exclamation::exclamation::exclamation: В корне проекта создана папка ShopDumpBD, где сохранен дамп базы данных для того чтобы быстро развернуть БД на своем устройстве
+
 **Для запуска проекта выполнить действия:**
 
-&nbsp; :heavy_check_mark: клонировать репозиторий на свой ПК: 
+&nbsp; 1. Клонировать репозиторий на свой ПК: 
 ```bash
 git clone https://github.com/Ivan-ISS/project_book-store-next.git
 ```
-&nbsp; :heavy_check_mark: поставить пакеты в корне проекта project_shop и во всех приложениях (Shop.Admin, Shop.API, Ahop.Client):
+&nbsp; 2. Поставить пакеты в корне проекта project_shop и во всех приложениях (Shop.Admin, Shop.API, Shop.Client):
 ```bash
 npm install
 ```
-&nbsp; :heavy_check_mark: в корне проекта создать файл .env, затем создать и определить в нем следующие переменные:
+&nbsp; 3. В корне проекта создать файл .env, затем создать и определить в нем следующие переменные:
 ```bash
 LOCAL_HOST=localhost
 LOCAL_PORT=3000
@@ -26,14 +28,18 @@ DB_NAME=ваши данные
 
 SESSION_SECRET=ваши данные
 ```
-&nbsp; :heavy_check_mark: собрать приложение Shop.Client выполнив команду в терминале:
+&nbsp; 4. Собрать приложение Shop.Client выполнив команду в терминале:
 ```bash
 npm run build
 ```
-&nbsp; :heavy_check_mark: запустить проект shop_project выполнив команду в терминале:
+&nbsp; 5. Запустить проект shop_project выполнив команду в терминале:
 ```bash
 npx nodemon
 ```
+:exclamation::exclamation::exclamation: При выполнении каманд в терминале следите за тем, чтобы вы находились в соответствущей дериктории:
+- *npm install* - директория должна быть - project_shop, Shop.Admin, Shop.API, Shop.Client;
+- *npm run build* - Shop.Client
+- *npx nodemon* - корень проекта (project_shop)
 
 ---
 
